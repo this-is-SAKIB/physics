@@ -1,160 +1,95 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Physics · Master Exam Question Deck</title>
-
-  <!-- Google Fonts: Playfair Display (academic title), Source Serif 4 (math & reading), JetBrains Mono (chrome) -->
+  <title>Physics Exam Study Deck</title>
+  
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,600;0,700;0,900;1,600;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400;1,8..60,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 
-  <!-- MathJax v3 Configuration (SVG output for crisp, publication-grade math typography) -->
+  <!-- MathJax for rendering LaTeX formulas -->
   <script>
+    let isMathJaxReady = false;
     window.MathJax = {
       tex: {
         inlineMath: [['$', '$'], ['\\(', '\\)']],
         displayMath: [['$$', '$$'], ['\\[', '\\]']],
-        processEscapes: true,
-        processEnvironments: true
+        processEscapes: true
       },
       options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        ignoreHtmlClass: 'tex2jax_ignore',
+        processHtmlClass: 'tex2jax_process'
       },
-      svg: {
-        fontCache: 'global'
+      startup: {
+        pageReady: () => {
+          return MathJax.startup.defaultPageReady().then(() => {
+            isMathJaxReady = true;
+            typesetAllHumanCards();
+          });
+        }
       }
     };
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 
   <style>
-    /* ==========================================================================
-       1. COLOR SYSTEM & CSS VARIABLES (Jewel-Tone Academic Palette)
-       ========================================================================== */
+    /* Visual Design System - Jewel Tone Palette */
     :root.dark {
-      /* Base surfaces */
-      --bg:           #080b10;   /* page background — obsidian ink */
-      --bg-card:      #0f141f;   /* main deck surface */
-      --bg-subtle:    #131926;   /* inner card surface */
-      --bg-item:      #151c2b;   /* question card background */
-      --bg-item-h:    #1a2336;   /* question card hover */
-      --bg-bar:       rgba(15, 20, 31, 0.88);
-      --border:       #212b3e;
-      --border-strong:#2d3a54;
-      --border-subtle:#182030;
+      --bg: #090c11;
+      --bg-card: #10141c;
+      --bg-item: #141924;
+      --bg-item-h: #1a2130;
+      --border: #212838;
+      --border-strong: #2c3448;
+      --text: #e6ebf5;
+      --text-dim: #8a97b5;
+      --accent: #5e8df0;
+      --glow: rgba(94,141,240,0.12);
+      
+      --h-grad-1: #d9b169;
+      --h-grad-2: #f0d99a;
+      --h-grad-3: #b6863c;
+      --h2-color: #e3c17e;
 
-      /* Text */
-      --text:         #e6ebf5;
-      --text-muted:   #94a1b8;
-      --text-dim:     #68758e;
-
-      /* Accent & highlights */
-      --accent:       #5e8df0;   /* soft indigo-blue */
-      --accent-glow:  rgba(94, 141, 240, 0.15);
-      --accent-ring:  rgba(94, 141, 240, 0.40);
-      --highlight-bg: rgba(94, 141, 240, 0.12);
-
-      /* Headings — academic muted champagne/brass gradient */
-      --h-grad-1:     #d9b169;
-      --h-grad-2:     #f0d99a;
-      --h-grad-3:     #b6863c;
-      --h2-color:     #e3c17e;
-      --h3-color:     #edd5a6;
-
-      /* Jewel Button Quad */
-      /* COPY — Indigo */
-      --copy-bg:      #131a2c;
-      --copy-fg:      #8fb0f7;
-      --copy-bdr:     #24365c;
-      --copy-hover:   #5e8df0;
-
-      /* GOOGLE — Copper / Amber */
-      --solve-bg:     #241a0f;
-      --solve-fg:     #e3a75e;
-      --solve-bdr:    #4a3016;
-      --solve-hover:  #c9822e;
-
-      /* ASK (Perplexity) — Emerald / Teal */
-      --perp-bg:      #0d201c;
-      --perp-fg:      #52d1b4;
-      --perp-bdr:     #164539;
-      --perp-hover:   #14b892;
-
-      /* BRAVE — Rose / Plum */
-      --brave-bg:     #221327;
-      --brave-fg:     #d992d1;
-      --brave-bdr:    #3f1f45;
-      --brave-hover:  #b354a8;
-
-      /* Code block surface */
-      --code-bg:      #0c1018;
-      --code-bdr:     #1c2538;
-      --code-fg:      #9db2d8;
+      /* Button Quintet */
+      --copy-bg: #131a2c;  --copy-fg: #8fb0f7;  --copy-bdr: #24365c;  --copy-hover: #5e8df0;  /* indigo  */
+      --solve-bg: #241a0f; --solve-fg: #e3a75e; --solve-bdr: #4a3016; --solve-hover: #c9822e; /* copper  */
+      --perp-bg: #0d201c;  --perp-fg: #52d1b4;  --perp-bdr: #164539;  --perp-hover: #14b892;  /* teal    */
+      --brave-bg: #221327; --brave-fg: #d992d1; --brave-bdr: #3f1f45; --brave-hover: #b354a8; /* plum    */
+      --chat-bg: #0c2016;  --chat-fg: #6be3a0;  --chat-bdr: #18472d;  --chat-hover: #22c55e; /* emerald */
     }
 
     :root.light {
-      /* Base surfaces */
-      --bg:           #f3f5f9;
-      --bg-card:      #ffffff;
-      --bg-subtle:    #f8f9fc;
-      --bg-item:      #f5f7fb;
-      --bg-item-h:    #ebf0fa;
-      --bg-bar:       rgba(255, 255, 255, 0.92);
-      --border:       #d8e0ed;
-      --border-strong:#c2cde0;
-      --border-subtle:#e5eaf3;
+      --bg: #f4f6fa;
+      --bg-card: #ffffff;
+      --bg-item: #f8fafc;
+      --bg-item-h: #edf2f7;
+      --border: #cbd5e1;
+      --border-strong: #94a3b8;
+      --text: #0f172a;
+      --text-dim: #475569;
+      --accent: #2563eb;
+      --glow: rgba(37,99,235,0.08);
 
-      /* Text */
-      --text:         #1a2233;
-      --text-muted:   #4e5c74;
-      --text-dim:     #7c8ba3;
+      --h-grad-1: #92400e;
+      --h-grad-2: #b45309;
+      --h-grad-3: #78350f;
+      --h2-color: #92400e;
 
-      /* Accent */
-      --accent:       #3766d4;
-      --accent-glow:  rgba(55, 102, 212, 0.12);
-      --accent-ring:  rgba(55, 102, 212, 0.35);
-      --highlight-bg: rgba(55, 102, 212, 0.08);
-
-      /* Headings */
-      --h-grad-1:     #8f6219;
-      --h-grad-2:     #b6832a;
-      --h-grad-3:     #734b0d;
-      --h2-color:     #7e581b;
-      --h3-color:     #5e4010;
-
-      /* Button quad */
-      --copy-bg:      #eef3ff;
-      --copy-fg:      #2b54bc;
-      --copy-bdr:     #c7d7fb;
-      --copy-hover:   #3f6fe0;
-
-      --solve-bg:     #fef5e7;
-      --solve-fg:     #9a5b12;
-      --solve-bdr:    #f3d7aa;
-      --solve-hover:  #c9822e;
-
-      --perp-bg:      #e6faf5;
-      --perp-fg:      #07785f;
-      --perp-bdr:     #aee3d6;
-      --perp-hover:   #14b892;
-
-      --brave-bg:     #fbeeec;
-      --brave-fg:     #962e78;
-      --brave-bdr:    #eec7e5;
-      --brave-hover:  #b354a8;
-
-      --code-bg:      #f0f3f9;
-      --code-bdr:     #d5deed;
-      --code-fg:      #273752;
+      --copy-bg: #eff6ff;  --copy-fg: #1d4ed8;  --copy-bdr: #bfdbfe;  --copy-hover: #2563eb;
+      --solve-bg: #fffbeeb; --solve-fg: #b45309; --solve-bdr: #fde68a; --solve-hover: #d97706;
+      --perp-bg: #f0fdf4;  --perp-fg: #047857;  --perp-bdr: #a7f3d0;  --perp-hover: #059669;
+      --brave-bg: #fdf4ff; --brave-fg: #a21caf;  --brave-bdr: #f5d0fe;  --brave-hover: #c026d3;
+      --chat-bg: #f0fdf4;  --chat-fg: #15803d;  --chat-bdr: #bbf7d0;  --chat-hover: #16a34a;
     }
 
-    /* ==========================================================================
-       2. BASE & TYPOGRAPHY
-       ========================================================================== */
-    *, *::before, *::after {
+    * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     html {
@@ -163,646 +98,455 @@
     }
 
     body {
-      margin: 0;
-      padding: 0;
-      background: radial-gradient(circle at 15% 0%, var(--accent-glow), transparent 36%), var(--bg);
-      background-attachment: fixed;
+      background-color: var(--bg);
       color: var(--text);
       font-family: 'Source Serif 4', Georgia, serif;
-      font-size: 1.0625rem;
-      line-height: 1.68;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.3s;
+      padding: 24px 16px;
+      min-height: 100vh;
     }
 
-    ::selection {
-      background: var(--accent);
-      color: #ffffff;
-    }
-
-    /* ==========================================================================
-       3. LAYOUT & SHELL
-       ========================================================================== */
+    /* Container */
     .page-container {
       max-width: 960px;
-      margin: 32px auto;
-      padding: 0 16px 64px;
+      margin: 0 auto;
     }
 
     .deck-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 24px;
-      box-shadow: 0 28px 80px rgba(0, 0, 0, 0.35);
-      overflow: hidden;
-      position: relative;
-      transition: border-color 0.3s ease;
+      border-radius: 16px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+      padding: 32px;
+      transition: border-color 0.3s;
     }
 
-    /* ==========================================================================
-       4. TOP UTILITY BAR
-       ========================================================================== */
+    /* Top Bar */
     .top-bar {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding: 16px 24px;
-      background: var(--bg-subtle);
-      border-bottom: 1px solid var(--border);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      flex-wrap: wrap;
-    }
-
-    .top-left {
-      display: flex;
       align-items: center;
-      gap: 12px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
     }
 
     .brand-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 1px;
       color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 6px;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    .brand-badge svg {
-      width: 14px;
-      height: 14px;
-      fill: currentColor;
-    }
-
-    .top-controls {
       display: flex;
       align-items: center;
       gap: 8px;
-      flex-wrap: wrap;
     }
 
-    .btn-ui {
-      background: transparent;
-      color: var(--text);
+    .brand-badge::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .ui-btn {
+      background: var(--bg-item);
       border: 1px solid var(--border-strong);
-      border-radius: 999px;
-      padding: 6px 13px;
+      color: var(--text);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
+      font-size: 0.8rem;
+      padding: 8px 14px;
+      border-radius: 8px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-      user-select: none;
+      transition: all 0.2s;
     }
 
-    .btn-ui:hover {
+    .ui-btn:hover {
+      background: var(--bg-item-h);
       border-color: var(--accent);
       color: var(--accent);
-      background: var(--highlight-bg);
-      transform: translateY(-1px);
     }
 
-    .btn-ui:focus-visible, .btn-action:focus-visible, a:focus-visible {
-      outline: 3px solid var(--accent);
-      outline-offset: 2px;
+    /* Hero Header */
+    header.hero {
+      text-align: center;
+      margin-bottom: 32px;
     }
 
-    /* ==========================================================================
-       5. HERO SECTION
-       ========================================================================== */
-    .hero {
-      padding: 44px 34px 28px;
-      border-bottom: 1px solid var(--border);
-      position: relative;
-    }
-
-    .hero-eyebrow {
+    .eyebrow-wrapper {
       display: flex;
-      align-items: center;
+      justify-content: center;
       gap: 10px;
-      color: var(--accent);
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .eyebrow-chip {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.75rem;
-      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.16em;
-      margin-bottom: 8px;
-    }
-
-    .hero-eyebrow .chip {
-      background: var(--highlight-bg);
-      padding: 2px 8px;
-      border-radius: 6px;
-      border: 1px solid rgba(94, 141, 240, 0.25);
-    }
-
-    .hero h1 {
-      margin: 8px 0 14px;
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(2.4rem, 6vw, 3.8rem);
-      font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: -0.035em;
-      background: linear-gradient(110deg, var(--h-grad-1) 0%, var(--h-grad-2) 50%, var(--h-grad-3) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .hero-desc {
-      max-width: 720px;
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      line-height: 1.6;
-      margin: 0 0 20px;
-    }
-
-    .hero-stats {
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.76rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--bg-item);
+      border: 1px solid var(--border);
       color: var(--text-dim);
     }
 
-    .hero-stats span {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    header.hero h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2.75rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--h-grad-1) 0%, var(--h-grad-2) 50%, var(--h-grad-3) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      line-height: 1.2;
     }
 
-    .hero-stats strong {
-      color: var(--text);
+    header.hero .subtitle {
+      color: var(--text-dim);
+      font-size: 1.05rem;
+      max-width: 650px;
+      margin: 0 auto 12px;
     }
 
-    /* ==========================================================================
-       6. DUAL CONTROL BAR: SORTING & THREE-FORMAT SELECTION
-       ========================================================================== */
+    header.hero .stat-line {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+
+    /* Controls Deck */
     .control-deck {
-      background: var(--bg-subtle);
-      border-bottom: 1px solid var(--border);
-      padding: 14px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-      flex-wrap: wrap;
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: var(--bg-item);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
     }
 
     .control-group {
       display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .control-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.70rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
+      font-size: 0.72rem;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
       color: var(--text-dim);
-      margin-right: 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .segmented-control {
-      display: inline-flex;
-      background: var(--bg-item);
-      border: 1px solid var(--border-strong);
-      border-radius: 999px;
+      display: flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
       padding: 3px;
       gap: 2px;
     }
 
-    .seg-btn {
+    .segmented-control button {
+      flex: 1;
       background: transparent;
       border: none;
-      color: var(--text-muted);
+      color: var(--text-dim);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem;
-      font-weight: 600;
-      padding: 5px 12px;
-      border-radius: 999px;
+      font-size: 0.75rem;
+      padding: 6px 8px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      user-select: none;
+      transition: all 0.2s;
     }
 
-    .seg-btn:hover {
+    .segmented-control button.active {
+      background: var(--accent);
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 2px 8px var(--glow);
+    }
+
+    /* Smart Nav Pills */
+    nav#smartNavPills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 28px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .nav-pill {
+      white-space: nowrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: var(--bg-item);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .nav-pill:hover {
+      border-color: var(--accent);
       color: var(--text);
     }
 
-    .seg-btn.active {
-      background: var(--accent);
-      color: #ffffff;
-      box-shadow: 0 2px 8px rgba(94, 141, 240, 0.35);
-    }
-
-    /* ==========================================================================
-       7. SMART NAVIGATION BAR (Quick Paper/Category Chips)
-       ========================================================================== */
-    .smart-nav-bar {
-      padding: 12px 24px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg-card);
-      overflow-x: auto;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      white-space: nowrap;
-      scrollbar-width: thin;
-    }
-
-    .smart-nav-bar::-webkit-scrollbar {
-      height: 4px;
-    }
-    .smart-nav-bar::-webkit-scrollbar-thumb {
-      background: var(--border-strong);
-      border-radius: 4px;
-    }
-
-    .nav-chip {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.71rem;
-      font-weight: 600;
-      padding: 4px 10px;
-      border-radius: 6px;
-      background: var(--bg-subtle);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: all 0.18s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .nav-chip:hover {
-      background: var(--bg-item-h);
-      border-color: var(--accent);
-      color: var(--accent);
-      transform: translateY(-1px);
-    }
-
-    .nav-chip.active {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: var(--highlight-bg);
-    }
-
-    /* ==========================================================================
-       8. SECTIONS (Paper or Category view)
-       ========================================================================== */
-    .deck-content {
-      padding: 8px 24px 36px;
-    }
-
+    /* Section Styling */
     .topic-section {
-      padding: 36px 0 20px;
-      border-bottom: 1px solid var(--border);
-      scroll-margin-top: 75px;
+      margin-bottom: 40px;
     }
 
-    .topic-section:last-of-type {
-      border-bottom: none;
-    }
-
-    .section-header {
+    .topic-section h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1.6rem;
+      color: var(--h2-color);
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 8px;
       margin-bottom: 20px;
-    }
-
-    .section-meta-line {
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+    }
+
+    .topic-section h2 .section-count {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
+      font-size: 0.8rem;
       color: var(--text-dim);
-      margin-bottom: 6px;
-      flex-wrap: wrap;
+      font-weight: normal;
     }
 
-    .section-meta-line .badge {
-      background: var(--bg-item);
-      padding: 2px 8px;
-      border-radius: 4px;
-      border: 1px solid var(--border);
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    .section-anchor-link {
-      color: var(--text-dim);
-      text-decoration: none;
-      transition: color 0.15s;
-    }
-
-    .section-anchor-link:hover {
-      color: var(--accent);
-      text-decoration: underline;
-    }
-
-    .section-header h2 {
-      margin: 4px 0 10px;
-      font-family: 'Playfair Display', Georgia, serif;
-      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-      font-weight: 700;
-      color: var(--h2-color);
-      letter-spacing: -0.02em;
-      line-height: 1.15;
-    }
-
-    .section-instruction {
-      margin: 0;
-      color: var(--text-muted);
-      font-size: 0.98rem;
-      font-style: italic;
-      line-height: 1.55;
-    }
-
-    /* ==========================================================================
-       9. QUESTION CARDS & NUMBERING (CSS Counters)
-       ========================================================================== */
     .prob-list {
       list-style: none;
-      padding: 0;
-      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
       counter-reset: question-counter;
     }
 
+    /* Question Card Markup */
     .prob-item {
-      counter-increment: question-counter;
       background: var(--bg-item);
       border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 22px 24px;
-      margin: 14px 0;
+      border-radius: 12px;
+      padding: 20px;
       display: grid;
-      grid-template-columns: 46px 1fr;
-      gap: 14px;
-      transition: all 0.22s cubic-bezier(0.2, 0, 0, 1);
-      scroll-margin-top: 85px;
+      grid-template-columns: 48px 1fr;
+      gap: 16px;
+      transition: border-color 0.2s, box-shadow 0.2s;
       position: relative;
     }
 
     .prob-item:hover {
-      background: var(--bg-item-h);
       border-color: var(--border-strong);
-      transform: translateY(-2px);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
-    }
-
-    .prob-item:target, .prob-item.anchor-highlight {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-ring), 0 12px 36px rgba(94, 141, 240, 0.2);
-      animation: highlightGlow 2.4s ease-out;
-    }
-
-    @keyframes highlightGlow {
-      0% {
-        background-color: var(--highlight-bg);
-        border-color: var(--accent);
-      }
-      100% {
-        background-color: var(--bg-item);
-        border-color: var(--border-strong);
-      }
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
     }
 
     .prob-num-wrap {
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding-top: 2px;
+      gap: 6px;
     }
 
     .prob-num {
+      counter-increment: question-counter;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.92rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--accent);
-      background: var(--bg-subtle);
+      background: var(--bg-card);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
       border: 1px solid var(--border);
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .prob-num::after {
-      content: counter(question-counter, decimal-leading-zero);
+    .prob-num::before {
+      content: counter(question-counter);
     }
 
     .prob-anchor {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.65rem;
+      font-size: 0.68rem;
       color: var(--text-dim);
       text-decoration: none;
-      margin-top: 6px;
-      padding: 2px 4px;
-      border-radius: 4px;
-      transition: all 0.15s;
+      transition: color 0.2s;
     }
 
     .prob-anchor:hover {
       color: var(--accent);
-      background: var(--highlight-bg);
     }
 
     .prob-content {
-      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
     }
 
     .prob-header-meta {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 12px;
+      align-items: center;
       flex-wrap: wrap;
       gap: 8px;
     }
 
-    .prob-tags {
+    .tags-group {
       display: flex;
-      align-items: center;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
     }
 
     .prob-tag {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      padding: 3px 9px;
-      border-radius: 6px;
-      background: var(--bg-subtle);
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--bg-card);
       border: 1px solid var(--border);
-      color: var(--text-muted);
+      color: var(--text-dim);
     }
 
     .prob-tag.category {
       color: var(--accent);
-      border-color: rgba(94, 141, 240, 0.25);
-      background: var(--highlight-bg);
+      border-color: rgba(94,141,240,0.3);
     }
 
-    .prob-view-switcher {
-      display: inline-flex;
+    .card-format-switch {
+      display: flex;
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 6px;
       padding: 2px;
       gap: 2px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.64rem;
     }
 
-    .pv-btn {
+    .card-format-switch button {
       background: transparent;
       border: none;
       color: var(--text-dim);
-      padding: 3px 8px;
-      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: 4px;
       cursor: pointer;
-      font-weight: 600;
-      transition: all 0.15s;
     }
 
-    .pv-btn:hover {
+    .card-format-switch button.active {
+      background: var(--border-strong);
       color: var(--text);
-    }
-
-    .pv-btn.active {
-      background: var(--accent);
-      color: #ffffff;
+      font-weight: 600;
     }
 
     .prob-text {
-      font-size: 1.05rem;
-      line-height: 1.68;
+      font-size: 1rem;
       color: var(--text);
-      margin-bottom: 18px;
+      white-space: pre-line;
+      line-height: 1.7;
     }
 
     .prob-text p {
-      margin: 0 0 10px;
-    }
-
-    .prob-text p:last-child {
-      margin-bottom: 0;
-    }
-
-    .display-math {
-      margin: 14px 0;
-      text-align: center;
-      overflow-x: auto;
-      overflow-y: hidden;
-      padding: 4px 0;
-    }
-
-    .sub-list {
-      margin: 10px 0 12px 22px;
-      padding: 0;
-      list-style-type: decimal;
-    }
-
-    .sub-list li {
       margin-bottom: 8px;
-      padding-left: 4px;
     }
 
-    .bullet-list {
-      margin: 10px 0 12px 22px;
-      padding: 0;
-      list-style-type: disc;
-    }
-
-    .bullet-list li {
-      margin-bottom: 8px;
-      padding-left: 4px;
-    }
-
-    .view-latex, .view-plain {
-      display: none;
-      background: var(--code-bg);
-      border: 1px solid var(--code-bdr);
-      border-radius: 12px;
-      padding: 14px 16px;
+    /* Code View Styling for LaTeX and Plain text formats */
+    .code-view {
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 14px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-      line-height: 1.6;
-      color: var(--code-fg);
+      font-size: 0.85rem;
+      color: #a5d6ff;
+      overflow-x: auto;
       white-space: pre-wrap;
       word-break: break-word;
-      overflow-x: auto;
-      margin-bottom: 18px;
+      line-height: 1.5;
     }
 
-    .prob-item[data-view="latex"] .view-human { display: none; }
-    .prob-item[data-view="latex"] .view-latex { display: block; }
-    .prob-item[data-view="latex"] .view-plain { display: none; }
+    :root.light .code-view {
+      background: #f1f5f9;
+      color: #0969da;
+      border-color: #cbd5e1;
+    }
 
-    .prob-item[data-view="plain"] .view-human { display: none; }
-    .prob-item[data-view="plain"] .view-latex { display: none; }
-    .prob-item[data-view="plain"] .view-plain { display: block; }
+    /* Structured lists inside Human view text */
+    .prob-bullet-list, .prob-num-list {
+      margin: 8px 0 12px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
-    /* ==========================================================================
-       10. ACTION BUTTON QUAD (COPY, GOOGLE, ASK, BRAVE)
-       ========================================================================== */
+    .prob-bullet-list li, .prob-num-list li {
+      line-height: 1.6;
+    }
+
+    /* MathJax responsive container */
+    mjx-container {
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 2px 0;
+    }
+
+    /* Quintet Action Buttons */
     .btn-group {
       display: flex;
-      align-items: center;
-      gap: 9px;
       flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
     }
 
-    .btn-action {
+    .action-btn {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.70rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      border-radius: 999px;
-      padding: 7px 14px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 7px 12px;
+      border-radius: 6px;
+      border: 1px solid;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      text-decoration: none;
-      border: 1px solid transparent;
-      transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+      gap: 6px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       user-select: none;
     }
 
-    .btn-action svg {
-      width: 13px;
-      height: 13px;
-      fill: currentColor;
-      flex-shrink: 0;
+    .action-btn:hover {
+      transform: translateY(-1px);
+      color: #ffffff !important;
     }
 
-    /* COPY button (Indigo) */
     .copy-btn {
       background: var(--copy-bg);
       color: var(--copy-fg);
@@ -810,13 +554,9 @@
     }
     .copy-btn:hover {
       background: var(--copy-hover);
-      color: #ffffff;
-      border-color: var(--copy-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(94, 141, 240, 0.35);
+      box-shadow: 0 4px 12px rgba(94,141,240,0.3);
     }
 
-    /* GOOGLE / SOLVE button (Copper/Amber) */
     .solve-btn {
       background: var(--solve-bg);
       color: var(--solve-fg);
@@ -824,13 +564,9 @@
     }
     .solve-btn:hover {
       background: var(--solve-hover);
-      color: #ffffff;
-      border-color: var(--solve-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(201, 130, 46, 0.35);
+      box-shadow: 0 4px 12px rgba(227,167,94,0.3);
     }
 
-    /* ASK / Perplexity button (Teal/Emerald) */
     .perp-btn {
       background: var(--perp-bg);
       color: var(--perp-fg);
@@ -838,13 +574,9 @@
     }
     .perp-btn:hover {
       background: var(--perp-hover);
-      color: #ffffff;
-      border-color: var(--perp-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(20, 184, 146, 0.35);
+      box-shadow: 0 4px 12px rgba(82,209,180,0.3);
     }
 
-    /* BRAVE button (Rose/Plum) */
     .brave-btn {
       background: var(--brave-bg);
       color: var(--brave-fg);
@@ -852,257 +584,177 @@
     }
     .brave-btn:hover {
       background: var(--brave-hover);
-      color: #ffffff;
-      border-color: var(--brave-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(179, 84, 168, 0.35);
+      box-shadow: 0 4px 12px rgba(217,146,209,0.3);
     }
 
-    .btn-format-badge {
-      font-size: 0.60rem;
-      opacity: 0.75;
-      background: rgba(0, 0, 0, 0.2);
-      padding: 1px 5px;
-      border-radius: 4px;
-      margin-left: 2px;
+    .chat-btn {
+      background: var(--chat-bg);
+      color: var(--chat-fg);
+      border-color: var(--chat-bdr);
+    }
+    .chat-btn:hover {
+      background: var(--chat-hover);
+      box-shadow: 0 4px 12px rgba(107,227,160,0.3);
     }
 
-    /* ==========================================================================
-       11. SMART NAVIGATION DRAWER & OVERLAY
-       ========================================================================== */
+    /* Footer */
+    footer.deck-footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* Drawer System */
     .drawer-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(4, 7, 12, 0.7);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      z-index: 100;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 998;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.28s ease;
+      transition: opacity 0.3s;
     }
 
-    .drawer-overlay.open {
+    .drawer-overlay.active {
       opacity: 1;
       pointer-events: auto;
     }
 
     .nav-drawer {
       position: fixed;
-      top: 0;
-      right: 0;
+      top: 0; right: -380px;
       width: 380px;
-      max-width: 90vw;
+      max-width: 85vw;
       height: 100vh;
       background: var(--bg-card);
-      border-left: 1px solid var(--border-strong);
-      z-index: 101;
-      box-shadow: -15px 0 50px rgba(0, 0, 0, 0.5);
+      border-left: 1px solid var(--border);
+      z-index: 999;
+      box-shadow: -8px 0 24px rgba(0,0,0,0.4);
       display: flex;
       flex-direction: column;
-      transform: translateX(100%);
-      transition: transform 0.32s cubic-bezier(0.2, 0, 0, 1);
+      transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    .nav-drawer.open {
-      transform: translateX(0);
+    .nav-drawer.active {
+      right: 0;
     }
 
     .drawer-header {
-      padding: 20px 24px;
+      padding: 20px;
       border-bottom: 1px solid var(--border);
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      background: var(--bg-subtle);
+      align-items: center;
     }
 
-    .drawer-title {
+    .drawer-header h3 {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
+      font-size: 1rem;
       color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .drawer-close {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-dim);
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: all 0.18s;
-    }
-
-    .drawer-close:hover {
-      color: var(--text);
-      border-color: var(--text-dim);
-    }
-
-    .drawer-search-wrap {
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
     }
 
     .drawer-search {
-      width: 100%;
-      background: var(--bg-item);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 9px 14px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.80rem;
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.2s;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
     }
 
-    .drawer-search:focus {
+    .drawer-search input {
+      width: 100%;
+      background: var(--bg-item);
+      border: 1px solid var(--border-strong);
+      padding: 10px 14px;
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      outline: none;
+    }
+
+    .drawer-search input:focus {
       border-color: var(--accent);
     }
 
-    .drawer-body {
-      flex: 1;
+    .drawer-content {
+      padding: 20px;
       overflow-y: auto;
-      padding: 16px 20px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
     .drawer-section-title {
-      font-size: 0.70rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--text-dim);
-      margin: 16px 0 8px;
-    }
-
-    .drawer-section-title:first-child {
-      margin-top: 0;
-    }
-
-    .drawer-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 12px;
-      border-radius: 8px;
-      color: var(--text-muted);
-      text-decoration: none;
-      transition: all 0.15s;
-      margin-bottom: 4px;
-      background: var(--bg-subtle);
-      border: 1px solid transparent;
-    }
-
-    .drawer-item:hover {
-      background: var(--bg-item-h);
-      border-color: var(--border-strong);
-      color: var(--text);
-      transform: translateX(3px);
-    }
-
-    .drawer-item.active {
-      background: var(--highlight-bg);
-      border-color: var(--accent);
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    .drawer-badge {
-      font-size: 0.65rem;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      color: var(--text-dim);
-    }
-
-    /* ==========================================================================
-       12. FOOTER
-       ========================================================================== */
-    .deck-footer {
-      padding: 28px 34px;
-      background: var(--bg-subtle);
-      border-top: 1px solid var(--border);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.76rem;
+      font-size: 0.72rem;
+      text-transform: uppercase;
       color: var(--text-dim);
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .drawer-list {
+      list-style: none;
       display: flex;
-      align-items: center;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .drawer-list-item a {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
       justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 16px;
+      align-items: center;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: background 0.15s;
     }
 
-    .footer-left {
-      max-width: 600px;
-      line-height: 1.5;
+    .drawer-list-item a:hover {
+      background: var(--bg-item-h);
+      color: var(--accent);
     }
 
-    .footer-right {
-      display: flex;
-      gap: 12px;
+    .drawer-list-item .count {
+      color: var(--text-dim);
+      font-size: 0.75rem;
     }
 
-    /* ==========================================================================
-       13. RESPONSIVE BREAKPOINT (640px)
-       ========================================================================== */
+    /* Mobile Responsiveness */
     @media (max-width: 640px) {
-      .page-container {
-        margin: 0;
-        padding: 0;
+      body {
+        padding: 12px 8px;
       }
       .deck-card {
-        border-radius: 0;
-        border-left: 0;
-        border-right: 0;
+        padding: 16px;
       }
-      .hero {
-        padding: 30px 20px 22px;
-      }
-      .top-bar, .control-deck {
-        padding: 12px 18px;
-      }
-      .deck-content {
-        padding: 6px 16px 28px;
+      header.hero h1 {
+        font-size: 2rem;
       }
       .prob-item {
-        grid-template-columns: 36px 1fr;
-        gap: 10px;
-        padding: 16px 14px;
-        border-radius: 14px;
+        grid-template-columns: 1fr;
+        padding: 16px;
       }
-      .prob-num {
-        width: 32px;
-        height: 32px;
-        font-size: 0.80rem;
-      }
-      .prob-text {
-        font-size: 0.98rem;
-      }
-      .btn-action {
-        font-size: 0.66rem;
-        padding: 6px 10px;
+      .prob-num-wrap {
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 8px;
       }
       .btn-group {
-        gap: 6px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
       }
-      .nav-drawer {
-        width: 100%;
-        max-width: 100vw;
+      .copy-btn {
+        grid-column: span 2;
       }
     }
   </style>
@@ -1110,591 +762,1016 @@
 <body>
 
 <div class="page-container">
-  <main class="deck-card">
-
-    <!-- Top Utility Bar -->
+  <div class="deck-card">
+    
+    <!-- Top Bar -->
     <div class="top-bar">
-      <div class="top-left">
-        <span class="brand-badge">
-          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          Physics Archive
-        </span>
-      </div>
-      <div class="top-controls">
-        <button class="btn-ui" onclick="toggleNavDrawer()" aria-label="Open Navigation Index Drawer">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-          INDEX (#ID)
+      <div class="brand-badge">Physics Exam Vault</div>
+      <div class="top-actions">
+        <button class="ui-btn" onclick="toggleDrawer()">
+          <span>☰</span> INDEX
         </button>
-        <button class="btn-ui theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Light and Dark Mode">
-          <span class="theme-icon">☾</span> THEME
+        <button class="ui-btn" onclick="toggleTheme()" id="themeToggleBtn">
+          <span>🌙</span> Dark
         </button>
       </div>
     </div>
 
     <!-- Hero Header -->
     <header class="hero">
-      <div class="hero-eyebrow">
-        <span>University Exam Collection</span>
-        <span class="chip">12 Questions</span>
-        <span class="chip">2 Papers</span>
+      <div class="eyebrow-wrapper">
+        <span class="eyebrow-chip">2 Exam Papers</span>
+        <span class="eyebrow-chip">12 Questions</span>
+        <span class="eyebrow-chip">5 Topics</span>
       </div>
-      <h1>Physics<br>Study Deck</h1>
-      <p class="hero-desc">
-        Complete past exam questions on mechanics — statics, kinematics, dynamics, energy, and rotation — typeset in publication-quality mathematical notation. Search or copy with your choice of LaTeX, Plain Text, or Human-Readable formulas, with full anchor deep-linking (#id).
-      </p>
-      <div class="hero-stats">
-        <span>📅 <strong>2 Exam Sessions</strong> (June 2026 – July 2026)</span>
-        <span>🏷️ <strong>6 Topic Categories</strong></span>
-        <span>✨ <strong>Verbatim Questions Preserved</strong></span>
-      </div>
+      <h1>Physics Question Bank</h1>
+      <p class="subtitle">Complete interactive collection with multi-format export and AI solver integration.</p>
+      <div class="stat-line">June 26th, 2026 &bull; July 14th, 2026</div>
     </header>
 
-    <!-- Controls Deck (Sort Mode + Three-Format Switcher) -->
+    <!-- Global Controls Deck -->
     <div class="control-deck">
-      <!-- Sort Mode Selection -->
+      <!-- Sort Mode -->
       <div class="control-group">
-        <span class="control-label">Sort By:</span>
-        <div class="segmented-control" role="tablist" aria-label="Sort Order">
-          <button class="seg-btn active" data-sort="paper" onclick="setSortMode('paper')">
-            📅 Question Paper
-          </button>
-          <button class="seg-btn" data-sort="category" onclick="setSortMode('category')">
-            🏷️ Type / Category
-          </button>
+        <div class="control-label">Sort Mode</div>
+        <div class="segmented-control" id="sortControl">
+          <button data-value="paper" class="active" onclick="setSortMode('paper')">By Paper</button>
+          <button data-value="category" onclick="setSortMode('category')">By Topic</button>
         </div>
       </div>
 
-      <!-- Three-Format Switcher (LaTeX default for buttons, Plain Text, Human-Readable) -->
+      <!-- Display Format -->
       <div class="control-group">
-        <span class="control-label">Format:</span>
-        <div class="segmented-control" role="tablist" aria-label="Button & Math Format">
-          <button class="seg-btn" data-format="latex" onclick="setGlobalFormat('latex')">
-            𝛌 LaTeX (Default)
-          </button>
-          <button class="seg-btn" data-format="plain" onclick="setGlobalFormat('plain')">
-            📄 Plain Text
-          </button>
-          <button class="seg-btn active" data-format="human" onclick="setGlobalFormat('human')">
-            📖 Human-Readable
-          </button>
+        <div class="control-label">
+          <span>Display Format</span>
+          <span style="font-size: 0.65rem; color: var(--accent); cursor: pointer;" onclick="forceAllDisplay()">[Force All]</span>
+        </div>
+        <div class="segmented-control" id="displayControl">
+          <button data-value="human" class="active" onclick="setGlobalDisplayFormat('human')">Human</button>
+          <button data-value="latex" onclick="setGlobalDisplayFormat('latex')">LaTeX</button>
+          <button data-value="plain" onclick="setGlobalDisplayFormat('plain')">Plain</button>
+        </div>
+      </div>
+
+      <!-- Button Action Format -->
+      <div class="control-group">
+        <div class="control-label">
+          <span>Button Payload</span>
+          <span style="font-size: 0.65rem; color: var(--accent); cursor: pointer;" onclick="forceAllButton()">[Force All]</span>
+        </div>
+        <div class="segmented-control" id="buttonControl">
+          <button data-value="latex" class="active" onclick="setGlobalButtonFormat('latex')">LaTeX</button>
+          <button data-value="human" onclick="setGlobalButtonFormat('human')">Human</button>
+          <button data-value="plain" onclick="setGlobalButtonFormat('plain')">Plain</button>
         </div>
       </div>
     </div>
 
-    <!-- Smart Navigation Quick-Chips Bar -->
-    <nav class="smart-nav-bar" id="smartNavPills" aria-label="Quick Section Navigation">
-      <!-- Dynamically filled by JavaScript based on current sort mode -->
-    </nav>
+    <!-- Smart Quick-Jump Pills -->
+    <nav id="smartNavPills"></nav>
 
-    <!-- Main Question List Container -->
-    <div id="deckContent" class="deck-content">
-      <!-- Sections & Question Cards rendered dynamically -->
-    </div>
+    <!-- Question Deck Content Container -->
+    <main id="deckContent"></main>
 
     <!-- Footer -->
     <footer class="deck-footer">
-      <div class="footer-left">
-        <strong>Physics Exam Archive</strong> · Source: <code>Physics_Question.pdf</code>.
-        Question text and mathematical formulas preserved verbatim. All 4 buttons dynamically use the active top format.
-      </div>
-      <div class="footer-right">
-        <a href="#top" class="nav-chip">↑ Back to Top</a>
-      </div>
+      <div>Physics Examination Deck &bull; High-Yield Problem Sets</div>
+      <div style="margin-top: 4px; color: var(--text-dim); font-size: 0.7rem;">LaTeX formulas typeset via MathJax 3 &bull; Unabridged action button payload forwarding</div>
     </footer>
 
-  </main>
+  </div>
 </div>
 
-<!-- Slide-in Smart Navigation Drawer (#id Directory) -->
-<div class="drawer-overlay" id="drawerOverlay" onclick="toggleNavDrawer(false)"></div>
-<aside class="nav-drawer" id="navDrawer" aria-label="Smart Anchor Navigation Directory">
+<!-- Slide-in Navigation Drawer -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleDrawer()"></div>
+<div class="nav-drawer" id="navDrawer">
   <div class="drawer-header">
-    <div class="drawer-title">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-      SMART NAVIGATION (#ID)
-    </div>
-    <button class="drawer-close" onclick="toggleNavDrawer(false)" aria-label="Close Drawer">&times;</button>
+    <h3>Question Navigation</h3>
+    <button class="ui-btn" onclick="toggleDrawer()">✕</button>
   </div>
-  <div class="drawer-search-wrap">
-    <input type="text" class="drawer-search" id="drawerSearchInput" placeholder="Filter questions or topics..." oninput="filterDrawerNav(this.value)">
+  <div class="drawer-search">
+    <input type="text" id="drawerSearchInput" placeholder="Search questions, topics, text..." oninput="filterDrawerItems()">
   </div>
-  <div class="drawer-body" id="drawerNavBody">
-    <!-- Filled dynamically -->
+  <div class="drawer-content" id="drawerContent">
+    <!-- Populated by JS -->
   </div>
-</aside>
+</div>
 
-<!-- Data & Client Logic -->
 <script>
-  // 1. DATA REPOSITORY: 12 Questions across 2 Papers and 6 Categories
-  const PAPERS_DATA = [{"id": "jun-26-2026", "date": "26 June 2026", "badge": "Exam Paper 1 · June 2026", "desc": "Summer session covering planar force systems and torque about the origin, projectile motion through a fixed target, connected blocks with static/kinetic friction, block-spring energy loss on a rough surface, rolling-without-slipping dynamics of a pulled cylinder, and ladder equilibrium with a climbing student."}, {"id": "jul-14-2026", "date": "14 July 2026", "badge": "Exam Paper 2 · July 2026", "desc": "Follow-up session featuring one-dimensional motion with time-varying acceleration, projectile range/height derivations, an Atwood machine with post-impact motion, vertical spring energy conservation, static equilibrium of a loaded beam, and rotational dynamics of a torque-driven disk."}];
-  const CATEGORIES_DATA = [{"id": "cat-statics", "key": "Statics & Rigid-Body Equilibrium", "icon": "⚖️", "title": "Statics & Rigid-Body Equilibrium", "desc": "Force and torque balance for rigid bodies at rest: resultant forces, net torque about a point, and the two conditions for static equilibrium applied to plates, ladders, and beams."}, {"id": "cat-projectile", "key": "Projectile Motion", "icon": "🎯", "title": "Projectile Motion", "desc": "Two-dimensional motion under constant gravitational acceleration: launch speed, time of flight, trajectory through a fixed point, and range/height relationships."}, {"id": "cat-newton-connected", "key": "Newton's Laws & Connected Bodies", "icon": "🔗", "title": "Newton's Laws & Connected Bodies", "desc": "Applications of Newton's second law to systems of blocks connected by strings and pulleys, including static/kinetic friction checks and post-constraint motion."}, {"id": "cat-energy-springs", "key": "Work-Energy Theorem & Springs", "icon": "🌀", "title": "Work-Energy Theorem & Springs", "desc": "Energy methods for blocks on frictionless and rough tracks, Hooke's law, elastic potential energy, and maximum spring compression."}, {"id": "cat-rotation", "key": "Rotational Dynamics & Rolling", "icon": "🔄", "title": "Rotational Dynamics & Rolling", "desc": "Torque, moment of inertia, angular acceleration, and rolling-without-slipping for cylinders and disks driven by applied forces or torques."}, {"id": "cat-kinematics", "key": "Kinematics", "icon": "📈", "title": "Kinematics", "desc": "One-dimensional motion analysis via calculus: deriving velocity and position from a time-dependent acceleration function."}];
-  const QUESTIONS_DATA = [{"id": "q-jun26-1", "paper_id": "jun-26-2026", "paper_title": "26 June 2026", "paper_date": "26 June 2026", "q_num": 1, "category": "Statics & Rigid-Body Equilibrium", "category_id": "cat-statics", "raw_latex": "A rigid plate lies in the $xy$-plane. Three forces act on it:\n\n   ●   $\\mathbf{F}_1$ has magnitude $85\\text{ N}$ and acts in the direction $8\\hat{i} - 15\\hat{j}$. It is applied at $P_1(0.25\\text{ m}, 0.35\\text{ m})$.\n   ●   $\\mathbf{F}_2 = \\langle -55, 45 \\rangle\\text{ N}$ is applied at $P_2(0.60\\text{ m}, 0.15\\text{ m})$.\n   ●   $\\mathbf{F}_3 = \\langle 35, A \\rangle\\text{ N}$ is applied at $P_3(0.30\\text{ m}, 0.50\\text{ m})$.\n\nThe resultant force is required to be parallel to the $x$-axis.\n\n   1.  Write $\\mathbf{F}_1$ in component form.\n   2.  Find $A$.\n   3.  Find the resultant force $\\mathbf{R}$.\n   4.  Find the net torque about the origin $\\tau_O$ (take counter-clockwise as positive).\n   5.  Find the shortest perpendicular distance $d$ from the origin to the line of action of $\\mathbf{R}$, and state whether this line of action passes above or below the origin.", "human_html": "<p>A rigid plate lies in the $xy$-plane. Three forces act on it:</p>\n<ul class=\"bullet-list\">\n<li>$\\mathbf{F}_1$ has magnitude $85\\text{ N}$ and acts in the direction $8\\hat{i} - 15\\hat{j}$. It is applied at $P_1(0.25\\text{ m}, 0.35\\text{ m})$.</li>\n<li>$\\mathbf{F}_2 = \\langle -55, 45 \\rangle\\text{ N}$ is applied at $P_2(0.60\\text{ m}, 0.15\\text{ m})$.</li>\n<li>$\\mathbf{F}_3 = \\langle 35, A \\rangle\\text{ N}$ is applied at $P_3(0.30\\text{ m}, 0.50\\text{ m})$.</li>\n</ul>\n<p>The resultant force is required to be parallel to the $x$-axis.</p>\n<ol class=\"sub-list\">\n<li>Write $\\mathbf{F}_1$ in component form.</li>\n<li>Find $A$.</li>\n<li>Find the resultant force $\\mathbf{R}$.</li>\n<li>Find the net torque about the origin $\\tau_O$ (take counter-clockwise as positive).</li>\n<li>Find the shortest perpendicular distance $d$ from the origin to the line of action of $\\mathbf{R}$, and state whether this line of action passes above or below the origin.</li>\n</ol>", "plain_text": "A rigid plate lies in the xy-plane. Three forces act on it:\n\n - F1 has magnitude 85 N and acts in the direction 8i - 15j. It is applied at P1(0.25 m, 0.35 m).\n - F2 = <-55, 45> N is applied at P2(0.60 m, 0.15 m).\n - F3 = <35, A> N is applied at P3(0.30 m, 0.50 m).\n\nThe resultant force is required to be parallel to the x-axis.\n\n 1. Write F1 in component form.\n 2. Find A.\n 3. Find the resultant force R.\n 4. Find the net torque about the origin tau_O (take counter-clockwise as positive).\n 5. Find the shortest perpendicular distance d from the origin to the line of action of R, and state whether this line of action passes above or below the origin.", "unicode_text": "A rigid plate lies in the xy-plane. Three forces act on it:\n\n ● F₁ has magnitude 85 N and acts in the direction 8î − 15ĵ. It is applied at P₁(0.25 m, 0.35 m).\n ● F₂ = ⟨-55, 45⟩ N is applied at P₂(0.60 m, 0.15 m).\n ● F₃ = ⟨35, A⟩ N is applied at P₃(0.30 m, 0.50 m).\n\nThe resultant force is required to be parallel to the x-axis.\n\n 1. Write F₁ in component form.\n 2. Find A.\n 3. Find the resultant force R.\n 4. Find the net torque about the origin τ_O (take counter-clockwise as positive).\n 5. Find the shortest perpendicular distance d from the origin to the line of action of R, and state whether this line of action passes above or below the origin.", "search_query": "A rigid plate lies in the xy-plane. Three forces act on it: - F1 has magnitude 85 N and acts in the direction 8i - 15j. It is applied at P1(0.25 m, 0.35 m). - F2 = <-55, 45> N is applied at P2(0.60 m,..."}, {"id": "q-jun26-2", "paper_id": "jun-26-2026", "paper_title": "26 June 2026", "paper_date": "26 June 2026", "q_num": 2, "category": "Projectile Motion", "category_id": "cat-projectile", "raw_latex": "A small ball is launched from a platform of height $y_0 = 1.80\\text{ m}$. It must pass through a circular hoop whose center is at:\n\n   ●   $x = 14.0\\text{ m}$\n   ●   $y = 5.20\\text{ m}$\n\nThe ball is launched at an angle $\\theta = 42^\\circ$ above the horizontal.\n\n   1.  Find the initial speed required for the ball to pass through the center of the hoop.\n   2.  Find the time at which the ball reaches the hoop.\n   3.  Determine whether the ball is rising or falling as it passes through the hoop.\n   4.  Find the horizontal distance from the launch point where the ball lands.", "human_html": "<p>A small ball is launched from a platform of height $y_0 = 1.80\\text{ m}$. It must pass through a circular hoop whose center is at:</p>\n<ul class=\"bullet-list\">\n<li>$x = 14.0\\text{ m}$</li>\n<li>$y = 5.20\\text{ m}$</li>\n</ul>\n<p>The ball is launched at an angle $\\theta = 42^\\circ$ above the horizontal.</p>\n<ol class=\"sub-list\">\n<li>Find the initial speed required for the ball to pass through the center of the hoop.</li>\n<li>Find the time at which the ball reaches the hoop.</li>\n<li>Determine whether the ball is rising or falling as it passes through the hoop.</li>\n<li>Find the horizontal distance from the launch point where the ball lands.</li>\n</ol>", "plain_text": "A small ball is launched from a platform of height y0 = 1.80 m. It must pass through a circular hoop whose center is at:\n\n - x = 14.0 m\n - y = 5.20 m\n\nThe ball is launched at an angle theta = 42 degrees above the horizontal.\n\n 1. Find the initial speed required for the ball to pass through the center of the hoop.\n 2. Find the time at which the ball reaches the hoop.\n 3. Determine whether the ball is rising or falling as it passes through the hoop.\n 4. Find the horizontal distance from the launch point where the ball lands.", "unicode_text": "A small ball is launched from a platform of height y₀ = 1.80 m. It must pass through a circular hoop whose center is at:\n\n ● x = 14.0 m\n ● y = 5.20 m\n\nThe ball is launched at an angle θ = 42° above the horizontal.\n\n 1. Find the initial speed required for the ball to pass through the center of the hoop.\n 2. Find the time at which the ball reaches the hoop.\n 3. Determine whether the ball is rising or falling as it passes through the hoop.\n 4. Find the horizontal distance from the launch point where the ball lands.", "search_query": "A small ball is launched from a platform of height y0 = 1.80 m. It must pass through a circular hoop whose center is at: - x = 14.0 m - y = 5.20 m The ball is launched at an angle theta = 42 degrees a..."}, {"id": "q-jun26-3", "paper_id": "jun-26-2026", "paper_title": "26 June 2026", "paper_date": "26 June 2026", "q_num": 3, "category": "Newton's Laws & Connected Bodies", "category_id": "cat-newton-connected", "raw_latex": "Block $m_1 = 7.0\\text{ kg}$ rests on a rough incline of angle $28^\\circ$. It is connected by a light string over a frictionless pulley to a hanging block $m_2 = 3.6\\text{ kg}$.\n\nThe coefficients of friction between $m_1$ and the incline are $\\mu_s = 0.42$ and $\\mu_k = 0.30$. The system is released from rest.\n\n   1.  Draw free-body diagrams for both blocks.\n   2.  Determine whether the system moves when released. If it moves, state the direction.\n   3.  If it moves, find the acceleration. If it does not move, find the static friction force acting on $m_1$.\n   4.  Find the tension in the string.\n   5.  Explain briefly why one must check static friction before using $\\mu_k$.", "human_html": "<p>Block $m_1 = 7.0\\text{ kg}$ rests on a rough incline of angle $28^\\circ$. It is connected by a light string over a frictionless pulley to a hanging block $m_2 = 3.6\\text{ kg}$.</p>\n<p>The coefficients of friction between $m_1$ and the incline are $\\mu_s = 0.42$ and $\\mu_k = 0.30$. The system is released from rest.</p>\n<ol class=\"sub-list\">\n<li>Draw free-body diagrams for both blocks.</li>\n<li>Determine whether the system moves when released. If it moves, state the direction.</li>\n<li>If it moves, find the acceleration. If it does not move, find the static friction force acting on $m_1$.</li>\n<li>Find the tension in the string.</li>\n<li>Explain briefly why one must check static friction before using $\\mu_k$.</li>\n</ol>", "plain_text": "Block m1 = 7.0 kg rests on a rough incline of angle 28 degrees. It is connected by a light string over a frictionless pulley to a hanging block m2 = 3.6 kg.\n\nThe coefficients of friction between m1 and the incline are mu_s = 0.42 and mu_k = 0.30. The system is released from rest.\n\n 1. Draw free-body diagrams for both blocks.\n 2. Determine whether the system moves when released. If it moves, state the direction.\n 3. If it moves, find the acceleration. If it does not move, find the static friction force acting on m1.\n 4. Find the tension in the string.\n 5. Explain briefly why one must check static friction before using mu_k.", "unicode_text": "Block m₁ = 7.0 kg rests on a rough incline of angle 28°. It is connected by a light string over a frictionless pulley to a hanging block m₂ = 3.6 kg.\n\nThe coefficients of friction between m₁ and the incline are μ_s = 0.42 and μ_k = 0.30. The system is released from rest.\n\n 1. Draw free-body diagrams for both blocks.\n 2. Determine whether the system moves when released. If it moves, state the direction.\n 3. If it moves, find the acceleration. If it does not move, find the static friction force acting on m₁.\n 4. Find the tension in the string.\n 5. Explain briefly why one must check static friction before using μ_k.", "search_query": "Block m1 = 7.0 kg rests on a rough incline of angle 28 degrees. It is connected by a light string over a frictionless pulley to a hanging block m2 = 3.6 kg. The coefficients of friction between m1 and..."}, {"id": "q-jun26-4", "paper_id": "jun-26-2026", "paper_title": "26 June 2026", "paper_date": "26 June 2026", "q_num": 4, "category": "Work-Energy Theorem & Springs", "category_id": "cat-energy-springs", "raw_latex": "A block of mass $m = 2.5\\text{ kg}$ is released from rest at point $A$, at height $h = 2.20\\text{ m}$ above a horizontal surface. The curved track from $A$ to $B$ is frictionless. From $B$, the block travels along a rough horizontal surface with coefficient of kinetic friction $\\mu_k = 0.25$.\n\nAfter traveling $1.60\\text{ m}$, it reaches an initially uncompressed spring of constant $k = 650\\text{ N/m}$. The rough surface continues underneath the spring.\n\n   1.  Find the speed of the block just before it reaches the horizontal surface at $B$.\n   2.  Find the speed just before the block first touches the spring.\n   3.  Find the maximum compression of the spring.\n   4.  Briefly identify where mechanical energy is lost in the process.", "human_html": "<p>A block of mass $m = 2.5\\text{ kg}$ is released from rest at point $A$, at height $h = 2.20\\text{ m}$ above a horizontal surface. The curved track from $A$ to $B$ is frictionless. From $B$, the block travels along a rough horizontal surface with coefficient of kinetic friction $\\mu_k = 0.25$.</p>\n<p>After traveling $1.60\\text{ m}$, it reaches an initially uncompressed spring of constant $k = 650\\text{ N/m}$. The rough surface continues underneath the spring.</p>\n<ol class=\"sub-list\">\n<li>Find the speed of the block just before it reaches the horizontal surface at $B$.</li>\n<li>Find the speed just before the block first touches the spring.</li>\n<li>Find the maximum compression of the spring.</li>\n<li>Briefly identify where mechanical energy is lost in the process.</li>\n</ol>", "plain_text": "A block of mass m = 2.5 kg is released from rest at point A, at height h = 2.20 m above a horizontal surface. The curved track from A to B is frictionless. From B, the block travels along a rough horizontal surface with coefficient of kinetic friction mu_k = 0.25.\n\nAfter traveling 1.60 m, it reaches an initially uncompressed spring of constant k = 650 N/m. The rough surface continues underneath the spring.\n\n 1. Find the speed of the block just before it reaches the horizontal surface at B.\n 2. Find the speed just before the block first touches the spring.\n 3. Find the maximum compression of the spring.\n 4. Briefly identify where mechanical energy is lost in the process.", "unicode_text": "A block of mass m = 2.5 kg is released from rest at point A, at height h = 2.20 m above a horizontal surface. The curved track from A to B is frictionless. From B, the block travels along a rough horizontal surface with coefficient of kinetic friction μ_k = 0.25.\n\nAfter traveling 1.60 m, it reaches an initially uncompressed spring of constant k = 650 N/m. The rough surface continues underneath the spring.\n\n 1. Find the speed of the block just before it reaches the horizontal surface at B.\n 2. Find the speed just before the block first touches the spring.\n 3. Find the maximum compression of the spring.\n 4. Briefly identify where mechanical energy is lost in the process.", "search_query": "A block of mass m = 2.5 kg is released from rest at point A, at height h = 2.20 m above a horizontal surface. The curved track from A to B is frictionless. From B, the block travels along a rough hori..."}, {"id": "q-jun26-5", "paper_id": "jun-26-2026", "paper_title": "26 June 2026", "paper_date": "26 June 2026", "q_num": 5, "category": "Rotational Dynamics & Rolling", "category_id": "cat-rotation", "raw_latex": "A solid cylinder of mass $M = 4.0\\text{ kg}$ and radius $R = 0.20\\text{ m}$ rests on a rough horizontal surface. A light string is wound around the cylinder and pulled horizontally to the right at the top with constant force $F = 30\\text{ N}$.\n\nThe cylinder rolls without slipping. Use $I = \\frac{1}{2}MR^2$.\n\n   1.  Draw a free-body diagram of the cylinder, including the direction you assume for friction.\n   2.  Write Newton's second law for translation and rotation, using a clear sign convention.\n   3.  Find the acceleration $a$ of the center of mass.\n   4.  Find the angular acceleration $\\alpha$.\n   5.  Find the friction force, including its direction. Is this direction consistent with your assumed rolling motion?", "human_html": "<p>A solid cylinder of mass $M = 4.0\\text{ kg}$ and radius $R = 0.20\\text{ m}$ rests on a rough horizontal surface. A light string is wound around the cylinder and pulled horizontally to the right at the top with constant force $F = 30\\text{ N}$.</p>\n<p>The cylinder rolls without slipping. Use $I = \\frac{1}{2}MR^2$.</p>\n<ol class=\"sub-list\">\n<li>Draw a free-body diagram of the cylinder, including the direction you assume for friction.</li>\n<li>Write Newton's second law for translation and rotation, using a clear sign convention.</li>\n<li>Find the acceleration $a$ of the center of mass.</li>\n<li>Find the angular acceleration $\\alpha$.</li>\n<li>Find the friction force, including its direction. Is this direction consistent with your assumed rolling motion?</li>\n</ol>", "plain_text": "A solid cylinder of mass M = 4.0 kg and radius R = 0.20 m rests on a rough horizontal surface. A light string is wound around the cylinder and pulled horizontally to the right at the top with constant force F = 30 N.\n\nThe cylinder rolls without slipping. Use I = (1/2)MR^2.\n\n 1. Draw a free-body diagram of the cylinder, including the direction you assume for friction.\n 2. Write Newton's second law for translation and rotation, using a clear sign convention.\n 3. Find the acceleration a of the center of mass.\n 4. Find the angular acceleration alpha.\n 5. Find the friction force, including its direction. Is this direction consistent with your assumed rolling motion?", "unicode_text": "A solid cylinder of mass M = 4.0 kg and radius R = 0.20 m rests on a rough horizontal surface. A light string is wound around the cylinder and pulled horizontally to the right at the top with constant force F = 30 N.\n\nThe cylinder rolls without slipping. Use I = ½MR².\n\n 1. Draw a free-body diagram of the cylinder, including the direction you assume for friction.\n 2. Write Newton's second law for translation and rotation, using a clear sign convention.\n 3. Find the acceleration a of the center of mass.\n 4. Find the angular acceleration α.\n 5. Find the friction force, including its direction. Is this direction consistent with your assumed rolling motion?", "search_query": "A solid cylinder of mass M = 4.0 kg and radius R = 0.20 m rests on a rough horizontal surface. A light string is wound around the cylinder and pulled horizontally to the right at the top with constant..."}, {"id": "q-jun26-6", "paper_id": "jun-26-2026", "paper_title": "26 June 2026", "paper_date": "26 June 2026", "q_num": 6, "category": "Statics & Rigid-Body Equilibrium", "category_id": "cat-statics", "raw_latex": "A uniform ladder of length $L = 6.0\\text{ m}$ and weight $W_L = 180\\text{ N}$ rests against a smooth frictionless vertical wall and a rough horizontal floor. The ladder makes an angle $\\theta = 65^\\circ$ with the floor. A student of weight $W_S = 620\\text{ N}$ stands $4.2\\text{ m}$ along the ladder, measured from the bottom.\n\n   1.  Draw a free-body diagram of the ladder.\n   2.  Find the normal reaction exerted by the wall.\n   3.  Find the normal reaction and friction force at the floor.\n   4.  Find the minimum coefficient of static friction required to prevent slipping.\n   5.  The student moves slowly upward along the ladder. Does the required coefficient of static friction increase, decrease or remain constant? Justify your answer briefly.", "human_html": "<p>A uniform ladder of length $L = 6.0\\text{ m}$ and weight $W_L = 180\\text{ N}$ rests against a smooth frictionless vertical wall and a rough horizontal floor. The ladder makes an angle $\\theta = 65^\\circ$ with the floor. A student of weight $W_S = 620\\text{ N}$ stands $4.2\\text{ m}$ along the ladder, measured from the bottom.</p>\n<ol class=\"sub-list\">\n<li>Draw a free-body diagram of the ladder.</li>\n<li>Find the normal reaction exerted by the wall.</li>\n<li>Find the normal reaction and friction force at the floor.</li>\n<li>Find the minimum coefficient of static friction required to prevent slipping.</li>\n<li>The student moves slowly upward along the ladder. Does the required coefficient of static friction increase, decrease or remain constant? Justify your answer briefly.</li>\n</ol>", "plain_text": "A uniform ladder of length L = 6.0 m and weight W_L = 180 N rests against a smooth frictionless vertical wall and a rough horizontal floor. The ladder makes an angle theta = 65 degrees with the floor. A student of weight W_S = 620 N stands 4.2 m along the ladder, measured from the bottom.\n\n 1. Draw a free-body diagram of the ladder.\n 2. Find the normal reaction exerted by the wall.\n 3. Find the normal reaction and friction force at the floor.\n 4. Find the minimum coefficient of static friction required to prevent slipping.\n 5. The student moves slowly upward along the ladder. Does the required coefficient of static friction increase, decrease or remain constant? Justify your answer briefly.", "unicode_text": "A uniform ladder of length L = 6.0 m and weight W_L = 180 N rests against a smooth frictionless vertical wall and a rough horizontal floor. The ladder makes an angle θ = 65° with the floor. A student of weight W_S = 620 N stands 4.2 m along the ladder, measured from the bottom.\n\n 1. Draw a free-body diagram of the ladder.\n 2. Find the normal reaction exerted by the wall.\n 3. Find the normal reaction and friction force at the floor.\n 4. Find the minimum coefficient of static friction required to prevent slipping.\n 5. The student moves slowly upward along the ladder. Does the required coefficient of static friction increase, decrease or remain constant? Justify your answer briefly.", "search_query": "A uniform ladder of length L = 6.0 m and weight W_L = 180 N rests against a smooth frictionless vertical wall and a rough horizontal floor. The ladder makes an angle theta = 65 degrees with the floor...."}, {"id": "q-jul26-1", "paper_id": "jul-14-2026", "paper_title": "14 July 2026", "paper_date": "14 July 2026", "q_num": 1, "category": "Kinematics", "category_id": "cat-kinematics", "raw_latex": "A particle moves along the $x$-axis. At $t = 0$, $x_{0} = 0$ and $v_{0} = 1.5\\text{ m/s}$. For $0 \\le t \\le 6.0\\text{ s}$, its acceleration is\n\n$$a(t) = 3.0 - 0.50t$$\n\nwhere $a$ is in $\\text{m/s}^{2}$ and $t$ is in seconds.\n\n   1.  State the definitions of velocity and acceleration in terms of derivatives of $x(t)$.\n   2.  Find the velocity $v(t)$.\n   3.  Find the position $x(t)$.\n   4.  Find the time at which the velocity is maximum, and find this maximum velocity.\n   5.  Find the displacement and average velocity over $0 \\le t \\le 6.0\\text{ s}$.", "human_html": "<p>A particle moves along the $x$-axis. At $t = 0$, $x_{0} = 0$ and $v_{0} = 1.5\\text{ m/s}$. For $0 \\le t \\le 6.0\\text{ s}$, its acceleration is:</p>\n<div class=\"display-math\">$$a(t) = 3.0 - 0.50t$$</div>\n<p>where $a$ is in $\\text{m/s}^{2}$ and $t$ is in seconds.</p>\n<ol class=\"sub-list\">\n<li>State the definitions of velocity and acceleration in terms of derivatives of $x(t)$.</li>\n<li>Find the velocity $v(t)$.</li>\n<li>Find the position $x(t)$.</li>\n<li>Find the time at which the velocity is maximum, and find this maximum velocity.</li>\n<li>Find the displacement and average velocity over $0 \\le t \\le 6.0\\text{ s}$.</li>\n</ol>", "plain_text": "A particle moves along the x-axis. At t = 0, x0 = 0 and v0 = 1.5 m/s. For 0 <= t <= 6.0 s, its acceleration is:\n\na(t) = 3.0 - 0.50t\n\nwhere a is in m/s^2 and t is in seconds.\n\n 1. State the definitions of velocity and acceleration in terms of derivatives of x(t).\n 2. Find the velocity v(t).\n 3. Find the position x(t).\n 4. Find the time at which the velocity is maximum, and find this maximum velocity.\n 5. Find the displacement and average velocity over 0 <= t <= 6.0 s.", "unicode_text": "A particle moves along the x-axis. At t = 0, x₀ = 0 and v₀ = 1.5 m/s. For 0 ≤ t ≤ 6.0 s, its acceleration is:\n\na(t) = 3.0 − 0.50t\n\nwhere a is in m/s² and t is in seconds.\n\n 1. State the definitions of velocity and acceleration in terms of derivatives of x(t).\n 2. Find the velocity v(t).\n 3. Find the position x(t).\n 4. Find the time at which the velocity is maximum, and find this maximum velocity.\n 5. Find the displacement and average velocity over 0 ≤ t ≤ 6.0 s.", "search_query": "A particle moves along the x-axis. At t = 0, x0 = 0 and v0 = 1.5 m/s. For 0 <= t <= 6.0 s, its acceleration is: a(t) = 3.0 - 0.50t where a is in m/s^2 and t is in seconds. 1. State the definitions of ..."}, {"id": "q-jul26-2", "paper_id": "jul-14-2026", "paper_title": "14 July 2026", "paper_date": "14 July 2026", "q_num": 2, "category": "Projectile Motion", "category_id": "cat-projectile", "raw_latex": "A projectile is launched from ground level and lands back at ground level. Air resistance is negligible. Its horizontal range is $R = 30.0\\text{ m}$ and its maximum height is $H = 5.00\\text{ m}$.\n\n   1.  Starting from the constant-acceleration equations, derive:\n$$H = \\frac{v_{0}^{2} \\sin^{2}\\theta}{2g}$$\n   2.  Starting from the constant-acceleration equations, derive:\n$$R = \\frac{v_{0}^{2} \\sin 2\\theta}{g}$$\n   3.  Use the given values of $R$ and $H$ to find the launch angle $\\theta$.\n   4.  Find the initial speed $v_{0}$.\n   5.  Find the total time of flight.", "human_html": "<p>A projectile is launched from ground level and lands back at ground level. Air resistance is negligible. Its horizontal range is $R = 30.0\\text{ m}$ and its maximum height is $H = 5.00\\text{ m}$.</p>\n<ol class=\"sub-list\">\n<li>Starting from the constant-acceleration equations, derive: $$H = \\frac{v_{0}^{2} \\sin^{2}\\theta}{2g}$$</li>\n<li>Starting from the constant-acceleration equations, derive: $$R = \\frac{v_{0}^{2} \\sin 2\\theta}{g}$$</li>\n<li>Use the given values of $R$ and $H$ to find the launch angle $\\theta$.</li>\n<li>Find the initial speed $v_{0}$.</li>\n<li>Find the total time of flight.</li>\n</ol>", "plain_text": "A projectile is launched from ground level and lands back at ground level. Air resistance is negligible. Its horizontal range is R = 30.0 m and its maximum height is H = 5.00 m.\n\n 1. Starting from the constant-acceleration equations, derive: H = (v0^2 * sin^2(theta)) / (2g)\n 2. Starting from the constant-acceleration equations, derive: R = (v0^2 * sin(2theta)) / g\n 3. Use the given values of R and H to find the launch angle theta.\n 4. Find the initial speed v0.\n 5. Find the total time of flight.", "unicode_text": "A projectile is launched from ground level and lands back at ground level. Air resistance is negligible. Its horizontal range is R = 30.0 m and its maximum height is H = 5.00 m.\n\n 1. Starting from the constant-acceleration equations, derive: H = v₀²sin²θ / 2g\n 2. Starting from the constant-acceleration equations, derive: R = v₀²sin(2θ) / g\n 3. Use the given values of R and H to find the launch angle θ.\n 4. Find the initial speed v₀.\n 5. Find the total time of flight.", "search_query": "A projectile is launched from ground level and lands back at ground level. Air resistance is negligible. Its horizontal range is R = 30.0 m and its maximum height is H = 5.00 m. 1. Starting from the c..."}, {"id": "q-jul26-3", "paper_id": "jul-14-2026", "paper_title": "14 July 2026", "paper_date": "14 July 2026", "q_num": 3, "category": "Newton's Laws & Connected Bodies", "category_id": "cat-newton-connected", "raw_latex": "Two masses are connected by a light inextensible string over a frictionless pulley. The masses are $m_{1} = 3.0\\text{ kg}$ and $m_{2} = 5.0\\text{ kg}$. The system is released from rest, with $m_{2}$ moving downward.\n\n   1.  Draw free-body diagrams for both masses.\n   2.  Apply Newton's second law to both masses, choosing a clear sign convention.\n   3.  Derive an expression for the acceleration in terms of $m_{1}$, $m_{2}$, and $g$.\n   4.  Find the acceleration and the tension in the string.\n   5.  If $m_{2}$ descends by $1.20\\text{ m}$ and then hits the floor, find the speed of the masses at that instant. How much farther does the $m_{1}$ rise after the string becomes slack?", "human_html": "<p>Two masses are connected by a light inextensible string over a frictionless pulley. The masses are $m_{1} = 3.0\\text{ kg}$ and $m_{2} = 5.0\\text{ kg}$. The system is released from rest, with $m_{2}$ moving downward.</p>\n<ol class=\"sub-list\">\n<li>Draw free-body diagrams for both masses.</li>\n<li>Apply Newton's second law to both masses, choosing a clear sign convention.</li>\n<li>Derive an expression for the acceleration in terms of $m_{1}$, $m_{2}$, and $g$.</li>\n<li>Find the acceleration and the tension in the string.</li>\n<li>If $m_{2}$ descends by $1.20\\text{ m}$ and then hits the floor, find the speed of the masses at that instant. How much farther does the $m_{1}$ rise after the string becomes slack?</li>\n</ol>", "plain_text": "Two masses are connected by a light inextensible string over a frictionless pulley. The masses are m1 = 3.0 kg and m2 = 5.0 kg. The system is released from rest, with m2 moving downward.\n\n 1. Draw free-body diagrams for both masses.\n 2. Apply Newton's second law to both masses, choosing a clear sign convention.\n 3. Derive an expression for the acceleration in terms of m1, m2, and g.\n 4. Find the acceleration and the tension in the string.\n 5. If m2 descends by 1.20 m and then hits the floor, find the speed of the masses at that instant. How much farther does the m1 rise after the string becomes slack?", "unicode_text": "Two masses are connected by a light inextensible string over a frictionless pulley. The masses are m₁ = 3.0 kg and m₂ = 5.0 kg. The system is released from rest, with m₂ moving downward.\n\n 1. Draw free-body diagrams for both masses.\n 2. Apply Newton's second law to both masses, choosing a clear sign convention.\n 3. Derive an expression for the acceleration in terms of m₁, m₂, and g.\n 4. Find the acceleration and the tension in the string.\n 5. If m₂ descends by 1.20 m and then hits the floor, find the speed of the masses at that instant. How much farther does the m₁ rise after the string becomes slack?", "search_query": "Two masses are connected by a light inextensible string over a frictionless pulley. The masses are m1 = 3.0 kg and m2 = 5.0 kg. The system is released from rest, with m2 moving downward. 1. Draw free-..."}, {"id": "q-jul26-4", "paper_id": "jul-14-2026", "paper_title": "14 July 2026", "paper_date": "14 July 2026", "q_num": 4, "category": "Work-Energy Theorem & Springs", "category_id": "cat-energy-springs", "raw_latex": "A block of mass $m = 2.0\\text{ kg}$ is released from rest at a height $h = 0.40\\text{ m}$ above the top of a vertical spring. The spring has constant $k = 800\\text{ N/m}$. Air resistance is negligible.\n\n   1.  State Hooke's law and the expression for the elastic potential energy stored in a spring.\n   2.  Write the conservation of energy equation for the block at maximum spring compression.\n   3.  Find the maximum compression of the spring.\n   4.  Find the magnitude of the spring force at maximum compression.\n   5.  At maximum compression, is the net force on the block zero? Justify your answer by comparing the spring force with the weight of the block.", "human_html": "<p>A block of mass $m = 2.0\\text{ kg}$ is released from rest at a height $h = 0.40\\text{ m}$ above the top of a vertical spring. The spring has constant $k = 800\\text{ N/m}$. Air resistance is negligible.</p>\n<ol class=\"sub-list\">\n<li>State Hooke's law and the expression for the elastic potential energy stored in a spring.</li>\n<li>Write the conservation of energy equation for the block at maximum spring compression.</li>\n<li>Find the maximum compression of the spring.</li>\n<li>Find the magnitude of the spring force at maximum compression.</li>\n<li>At maximum compression, is the net force on the block zero? Justify your answer by comparing the spring force with the weight of the block.</li>\n</ol>", "plain_text": "A block of mass m = 2.0 kg is released from rest at a height h = 0.40 m above the top of a vertical spring. The spring has constant k = 800 N/m. Air resistance is negligible.\n\n 1. State Hooke's law and the expression for the elastic potential energy stored in a spring.\n 2. Write the conservation of energy equation for the block at maximum spring compression.\n 3. Find the maximum compression of the spring.\n 4. Find the magnitude of the spring force at maximum compression.\n 5. At maximum compression, is the net force on the block zero? Justify your answer by comparing the spring force with the weight of the block.", "unicode_text": "A block of mass m = 2.0 kg is released from rest at a height h = 0.40 m above the top of a vertical spring. The spring has constant k = 800 N/m. Air resistance is negligible.\n\n 1. State Hooke's law and the expression for the elastic potential energy stored in a spring.\n 2. Write the conservation of energy equation for the block at maximum spring compression.\n 3. Find the maximum compression of the spring.\n 4. Find the magnitude of the spring force at maximum compression.\n 5. At maximum compression, is the net force on the block zero? Justify your answer by comparing the spring force with the weight of the block.", "search_query": "A block of mass m = 2.0 kg is released from rest at a height h = 0.40 m above the top of a vertical spring. The spring has constant k = 800 N/m. Air resistance is negligible. 1. State Hooke's law and ..."}, {"id": "q-jul26-5", "paper_id": "jul-14-2026", "paper_title": "14 July 2026", "paper_date": "14 July 2026", "q_num": 5, "category": "Statics & Rigid-Body Equilibrium", "category_id": "cat-statics", "raw_latex": "A uniform horizontal beam of length $L = 4.0\\text{ m}$ and weight $W_{B} = 120\\text{ N}$ is attached to a vertical wall by a hinge at its left end. A cable attached to the right end makes an angle of $40^{\\circ}$ above the horizontal. A load of weight $W = 280\\text{ N}$ hangs from the beam at a distance $3.0\\text{ m}$ from the hinge.\n\n   1.  State the two conditions for static equilibrium of a rigid body.\n   2.  Draw a free-body diagram of the beam.\n   3.  Taking torques about the hinge, find the tension in the cable.\n   4.  Find the horizontal and vertical components of the force exerted by the hinge on the beam.\n   5.  Explain briefly why taking torques about the hinge is a convenient choice.", "human_html": "<p>A uniform horizontal beam of length $L = 4.0\\text{ m}$ and weight $W_{B} = 120\\text{ N}$ is attached to a vertical wall by a hinge at its left end. A cable attached to the right end makes an angle of $40^{\\circ}$ above the horizontal. A load of weight $W = 280\\text{ N}$ hangs from the beam at a distance $3.0\\text{ m}$ from the hinge.</p>\n<ol class=\"sub-list\">\n<li>State the two conditions for static equilibrium of a rigid body.</li>\n<li>Draw a free-body diagram of the beam.</li>\n<li>Taking torques about the hinge, find the tension in the cable.</li>\n<li>Find the horizontal and vertical components of the force exerted by the hinge on the beam.</li>\n<li>Explain briefly why taking torques about the hinge is a convenient choice.</li>\n</ol>", "plain_text": "A uniform horizontal beam of length L = 4.0 m and weight W_B = 120 N is attached to a vertical wall by a hinge at its left end. A cable attached to the right end makes an angle of 40 degrees above the horizontal. A load of weight W = 280 N hangs from the beam at a distance 3.0 m from the hinge.\n\n 1. State the two conditions for static equilibrium of a rigid body.\n 2. Draw a free-body diagram of the beam.\n 3. Taking torques about the hinge, find the tension in the cable.\n 4. Find the horizontal and vertical components of the force exerted by the hinge on the beam.\n 5. Explain briefly why taking torques about the hinge is a convenient choice.", "unicode_text": "A uniform horizontal beam of length L = 4.0 m and weight W_B = 120 N is attached to a vertical wall by a hinge at its left end. A cable attached to the right end makes an angle of 40° above the horizontal. A load of weight W = 280 N hangs from the beam at a distance 3.0 m from the hinge.\n\n 1. State the two conditions for static equilibrium of a rigid body.\n 2. Draw a free-body diagram of the beam.\n 3. Taking torques about the hinge, find the tension in the cable.\n 4. Find the horizontal and vertical components of the force exerted by the hinge on the beam.\n 5. Explain briefly why taking torques about the hinge is a convenient choice.", "search_query": "A uniform horizontal beam of length L = 4.0 m and weight W_B = 120 N is attached to a vertical wall by a hinge at its left end. A cable attached to the right end makes an angle of 40 degrees above the..."}, {"id": "q-jul26-6", "paper_id": "jul-14-2026", "paper_title": "14 July 2026", "paper_date": "14 July 2026", "q_num": 6, "category": "Rotational Dynamics & Rolling", "category_id": "cat-rotation", "raw_latex": "A uniform solid disk of mass $M = 6.0\\text{ kg}$ and radius $R = 0.25\\text{ m}$ is mounted on a frictionless axle through its centre. The disk is initially at rest. A constant tangential force $F = 18\\text{ N}$ is applied at the rim for $t = 5.0\\text{ s}$.\n\nUse $I = \\frac{1}{2}MR^{2}$.\n\n   1.  State Newton's second law for rotational motion and define the quantities involved.\n   2.  Find the torque exerted by the applied force.\n   3.  Find the angular acceleration of the disk.\n   4.  Find the angular speed after $5.0\\text{ s}$ and the angle through which it has turned.\n   5.  Find the work done by the applied force and show that it equals the final rotational kinetic energy.", "human_html": "<p>A uniform solid disk of mass $M = 6.0\\text{ kg}$ and radius $R = 0.25\\text{ m}$ is mounted on a frictionless axle through its centre. The disk is initially at rest. A constant tangential force $F = 18\\text{ N}$ is applied at the rim for $t = 5.0\\text{ s}$.</p>\n<p>Use $I = \\frac{1}{2}MR^{2}$.</p>\n<ol class=\"sub-list\">\n<li>State Newton's second law for rotational motion and define the quantities involved.</li>\n<li>Find the torque exerted by the applied force.</li>\n<li>Find the angular acceleration of the disk.</li>\n<li>Find the angular speed after $5.0\\text{ s}$ and the angle through which it has turned.</li>\n<li>Find the work done by the applied force and show that it equals the final rotational kinetic energy.</li>\n</ol>", "plain_text": "A uniform solid disk of mass M = 6.0 kg and radius R = 0.25 m is mounted on a frictionless axle through its centre. The disk is initially at rest. A constant tangential force F = 18 N is applied at the rim for t = 5.0 s.\n\nUse I = (1/2)MR^2.\n\n 1. State Newton's second law for rotational motion and define the quantities involved.\n 2. Find the torque exerted by the applied force.\n 3. Find the angular acceleration of the disk.\n 4. Find the angular speed after 5.0 s and the angle through which it has turned.\n 5. Find the work done by the applied force and show that it equals the final rotational kinetic energy.", "unicode_text": "A uniform solid disk of mass M = 6.0 kg and radius R = 0.25 m is mounted on a frictionless axle through its centre. The disk is initially at rest. A constant tangential force F = 18 N is applied at the rim for t = 5.0 s.\n\nUse I = ½MR².\n\n 1. State Newton's second law for rotational motion and define the quantities involved.\n 2. Find the torque exerted by the applied force.\n 3. Find the angular acceleration of the disk.\n 4. Find the angular speed after 5.0 s and the angle through which it has turned.\n 5. Find the work done by the applied force and show that it equals the final rotational kinetic energy.", "search_query": "A uniform solid disk of mass M = 6.0 kg and radius R = 0.25 m is mounted on a frictionless axle through its centre. The disk is initially at rest. A constant tangential force F = 18 N is applied at th..."}];
+/**
+ * Master Data Definitions
+ */
+const PAPERS_DATA = [
+  { id: "JUN26", title: "Date: June 26th, 2026", shortName: "June 26, 2026" },
+  { id: "JUL14", title: "Date: July 14th, 2026", shortName: "July 14, 2026" }
+];
 
-  // 2. STATE
-  let currentSort = 'paper';       // 'paper' | 'category'
-  let currentFormat = 'human';     // 'latex' (default) | 'plain' | 'human'
-  let currentTheme = 'dark';       // 'dark' (default) | 'light'
+const CATEGORIES_DATA = [
+  { id: "STATICS", title: "Statics & Force Systems" },
+  { id: "KINEMATICS", title: "Kinematics & Projectiles" },
+  { id: "DYNAMICS", title: "Dynamics & Friction" },
+  { id: "ENERGY", title: "Work, Energy & Springs" },
+  { id: "ROTATION", title: "Rotational Dynamics & Rolling" }
+];
 
-  // DOM node cache for zero-flicker instant sort reordering
-  let paperSectionsMap = new Map();     // paper_id -> section element
-  let categorySectionsMap = new Map();  // category_id -> section element
-  let questionCardElements = new Map(); // question_id -> li element
+const QUESTIONS_DATA = [
+  /* JUNE 26th QUESTIONS */
+  {
+    id: "Q1_JUN26",
+    paperId: "JUN26",
+    paperName: "June 26th, 2026",
+    category: "STATICS",
+    categoryName: "Statics & Force Systems",
+    qNum: "Q1",
+    title: "Q1. Force system in the plane",
+    humanText: `A rigid plate lies in the $xy$-plane. Three forces act on it:
+• $\\mathbf{F}_1$ has magnitude $85\\text{ N}$ and acts in the direction $8\\hat{i} - 15\\hat{j}$. It is applied at $P_1(0.25\\text{ m}, 0.35\\text{ m})$.
+• $\\mathbf{F}_2 = \\langle -55, 45 \\rangle\\text{ N}$ is applied at $P_2(0.60\\text{ m}, 0.15\\text{ m})$.
+• $\\mathbf{F}_3 = \\langle 35, A \\rangle\\text{ N}$ is applied at $P_3(0.30\\text{ m}, 0.50\\text{ m})$.
+The resultant force is required to be parallel to the $x$-axis.
 
-  // 3. INITIALIZATION
-  document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('phys_deck_theme') || 'dark';
-    setTheme(savedTheme);
+1. Write $\\mathbf{F}_1$ in component form.
+2. Find $A$.
+3. Find the resultant force $\\mathbf{R}$.
+4. Find the net torque about the origin $\\tau_O$ (take counter-clockwise as positive).
+5. Find the shortest perpendicular distance $d$ from the origin to the line of action of $\\mathbf{R}$, and state whether this line of action passes above or below the origin.`,
+    latexText: `Q1. Force system in the plane
+A rigid plate lies in the $xy$-plane. Three forces act on it:
+  - $\\mathbf{F}_1$ has magnitude $85\\text{ N}$ and acts in the direction $8\\hat{i} - 15\\hat{j}$. It is applied at $P_1(0.25\\text{ m}, 0.35\\text{ m})$.
+  - $\\mathbf{F}_2 = \\langle -55, 45 \\rangle\\text{ N}$ is applied at $P_2(0.60\\text{ m}, 0.15\\text{ m})$.
+  - $\\mathbf{F}_3 = \\langle 35, A \\rangle\\text{ N}$ is applied at $P_3(0.30\\text{ m}, 0.50\\text{ m})$.
+The resultant force is required to be parallel to the $x$-axis.
+1. Write $\\mathbf{F}_1$ in component form.
+2. Find $A$.
+3. Find the resultant force $\\mathbf{R}$.
+4. Find the net torque about the origin $\\tau_O$ (take counter-clockwise as positive).
+5. Find the shortest perpendicular distance $d$ from the origin to the line of action of $\\mathbf{R}$, and state whether this line of action passes above or below the origin.`,
+    plainText: `Q1. Force system in the plane
+A rigid plate lies in the xy-plane. Three forces act on it:
+- F1 has magnitude 85 N and acts in the direction 8i - 15j. It is applied at P1(0.25 m, 0.35 m).
+- F2 = <-55, 45> N is applied at P2(0.60 m, 0.15 m).
+- F3 = <35, A> N is applied at P3(0.30 m, 0.50 m).
+The resultant force is required to be parallel to the x-axis.
+1. Write F1 in component form.
+2. Find A.
+3. Find the resultant force R.
+4. Find the net torque about the origin tau_O (take counter-clockwise as positive).
+5. Find the shortest perpendicular distance d from the origin to the line of action of R, and state whether this line of action passes above or below the origin.`
+  },
+  {
+    id: "Q2_JUN26",
+    paperId: "JUN26",
+    paperName: "June 26th, 2026",
+    category: "KINEMATICS",
+    categoryName: "Kinematics & Projectiles",
+    qNum: "Q2",
+    title: "Q2. Projectile through a target",
+    humanText: `A small ball is launched from a platform of height $y_0 = 1.80\\text{ m}$. It must pass through a circular hoop whose center is at:
+• $x = 14.0\\text{ m}$
+• $y = 5.20\\text{ m}$
+The ball is launched at an angle $\\theta = 42^\\circ$ above the horizontal.
 
-    // Build the DOM structures
-    initDOMStructures();
+1. Find the initial speed required for the ball to pass through the center of the hoop.
+2. Find the time at which the ball reaches the hoop.
+3. Determine whether the ball is rising or falling as it passes through the hoop.
+4. Find the horizontal distance from the launch point where the ball lands.`,
+    latexText: `Q2. Projectile through a target
+A small ball is launched from a platform of height $y_0 = 1.80\\text{ m}$. It must pass through a circular hoop whose center is at:
+  - $x = 14.0\\text{ m}$
+  - $y = 5.20\\text{ m}$
+The ball is launched at an angle $\\theta = 42^\\circ$ above the horizontal.
+1. Find the initial speed required for the ball to pass through the center of the hoop.
+2. Find the time at which the ball reaches the hoop.
+3. Determine whether the ball is rising or falling as it passes through the hoop.
+4. Find the horizontal distance from the launch point where the ball lands.`,
+    plainText: `Q2. Projectile through a target
+A small ball is launched from a platform of height y0 = 1.80 m. It must pass through a circular hoop whose center is at:
+- x = 14.0 m
+- y = 5.20 m
+The ball is launched at an angle theta = 42 deg above the horizontal.
+1. Find the initial speed required for the ball to pass through the center of the hoop.
+2. Find the time at which the ball reaches the hoop.
+3. Determine whether the ball is rising or falling as it passes through the hoop.
+4. Find the horizontal distance from the launch point where the ball lands.`
+  },
+  {
+    id: "Q3_JUN26",
+    paperId: "JUN26",
+    paperName: "June 26th, 2026",
+    category: "DYNAMICS",
+    categoryName: "Dynamics & Friction",
+    qNum: "Q3",
+    title: "Q3. Connected bodies with friction",
+    humanText: `Block $m_1 = 7.0\\text{ kg}$ rests on a rough incline of angle $28^\\circ$. It is connected by a light string over a frictionless pulley to a hanging block $m_2 = 3.6\\text{ kg}$.
+The coefficients of friction between $m_1$ and the incline are $\\mu_s = 0.42$ and $\\mu_k = 0.30$. The system is released from rest.
 
-    // Initial render in default paper sort mode
-    applySortDisplay();
-    updateFormatButtons();
+1. Draw free-body diagrams for both blocks.
+2. Determine whether the system moves when released. If it moves, state the direction.
+3. If it moves, find the acceleration. If it does not move, find the static friction force acting on $m_1$.
+4. Find the tension in the string.
+5. Explain briefly why one must check static friction before using $\\mu_k$.`,
+    latexText: `Q3. Connected bodies with friction
+Block $m_1 = 7.0\\text{ kg}$ rests on a rough incline of angle $28^\\circ$. It is connected by a light string over a frictionless pulley to a hanging block $m_2 = 3.6\\text{ kg}$.
+The coefficients of friction between $m_1$ and the incline are $\\mu_s = 0.42$ and $\\mu_k = 0.30$. The system is released from rest.
+1. Draw free-body diagrams for both blocks.
+2. Determine whether the system moves when released. If it moves, state the direction.
+3. If it moves, find the acceleration. If it does not move, find the static friction force acting on $m_1$.
+4. Find the tension in the string.
+5. Explain briefly why one must check static friction before using $\\mu_k$.`,
+    plainText: `Q3. Connected bodies with friction
+Block m1 = 7.0 kg rests on a rough incline of angle 28 deg. It is connected by a light string over a frictionless pulley to a hanging block m2 = 3.6 kg.
+The coefficients of friction between m1 and the incline are mu_s = 0.42 and mu_k = 0.30. The system is released from rest.
+1. Draw free-body diagrams for both blocks.
+2. Determine whether the system moves when released. If it moves, state the direction.
+3. If it moves, find the acceleration. If it does not move, find the static friction force acting on m1.
+4. Find the tension in the string.
+5. Explain briefly why one must check static friction before using mu_k.`
+  },
+  {
+    id: "Q4_JUN26",
+    paperId: "JUN26",
+    paperName: "June 26th, 2026",
+    category: "ENERGY",
+    categoryName: "Work, Energy & Springs",
+    qNum: "Q4",
+    title: "Q4. Block, friction and spring",
+    humanText: `A block of mass $m = 2.5\\text{ kg}$ is released from rest at point $A$, at height $h = 2.20\\text{ m}$ above a horizontal surface. The curved track from $A$ to $B$ is frictionless. From $B$, the block travels along a rough horizontal surface with coefficient of kinetic friction $\\mu_k = 0.25$.
+After traveling $1.60\\text{ m}$, it reaches an initially uncompressed spring of constant $k = 650\\text{ N/m}$. The rough surface continues underneath the spring.
 
-    // Render drawer nav
-    renderDrawerNav();
+1. Find the speed of the block just before it reaches the horizontal surface at $B$.
+2. Find the speed just before the block first touches the spring.
+3. Find the maximum compression of the spring.
+4. Briefly identify where mechanical energy is lost in the process.`,
+    latexText: `Q4. Block, friction and spring
+A block of mass $m = 2.5\\text{ kg}$ is released from rest at point $A$, at height $h = 2.20\\text{ m}$ above a horizontal surface. The curved track from $A$ to $B$ is frictionless. From $B$, the block travels along a rough horizontal surface with coefficient of kinetic friction $\\mu_k = 0.25$.
+After traveling $1.60\\text{ m}$, it reaches an initially uncompressed spring of constant $k = 650\\text{ N/m}$. The rough surface continues underneath the spring.
+1. Find the speed of the block just before it reaches the horizontal surface at $B$.
+2. Find the speed just before the block first touches the spring.
+3. Find the maximum compression of the spring.
+4. Briefly identify where mechanical energy is lost in the process.`,
+    plainText: `Q4. Block, friction and spring
+A block of mass m = 2.5 kg is released from rest at point A, at height h = 2.20 m above a horizontal surface. The curved track from A to B is frictionless. From B, the block travels along a rough horizontal surface with coefficient of kinetic friction mu_k = 0.25.
+After traveling 1.60 m, it reaches an initially uncompressed spring of constant k = 650 N/m. The rough surface continues underneath the spring.
+1. Find the speed of the block just before it reaches the horizontal surface at B.
+2. Find the speed just before the block first touches the spring.
+3. Find the maximum compression of the spring.
+4. Briefly identify where mechanical energy is lost in the process.`
+  },
+  {
+    id: "Q5_JUN26",
+    paperId: "JUN26",
+    paperName: "June 26th, 2026",
+    category: "ROTATION",
+    categoryName: "Rotational Dynamics & Rolling",
+    qNum: "Q5",
+    title: "Q5. Rolling cylinder pulled by a string",
+    humanText: `A solid cylinder of mass $M = 4.0\\text{ kg}$ and radius $R = 0.20\\text{ m}$ rests on a rough horizontal surface. A light string is wound around the cylinder and pulled horizontally to the right at the top with constant force $F = 30\\text{ N}$. The cylinder rolls without slipping. Use $I = \\frac{1}{2}MR^2$.
 
-    // Initial MathJax Typeset on the entire container
-    if (window.MathJax && window.MathJax.typesetPromise) {
-      window.MathJax.typesetPromise([document.getElementById('deckContent')]).catch(err => console.error('MathJax error:', err));
+1. Draw a free-body diagram of the cylinder, including the direction you assume for friction.
+2. Write Newton's second law for translation and rotation, using a clear sign convention.
+3. Find the acceleration $a$ of the center of mass.
+4. Find the angular acceleration $\\alpha$.
+5. Find the friction force, including its direction. Is this direction consistent with your assumed rolling motion?`,
+    latexText: `Q5. Rolling cylinder pulled by a string
+A solid cylinder of mass $M = 4.0\\text{ kg}$ and radius $R = 0.20\\text{ m}$ rests on a rough horizontal surface. A light string is wound around the cylinder and pulled horizontally to the right at the top with constant force $F = 30\\text{ N}$. The cylinder rolls without slipping. Use $I = \\frac{1}{2}MR^2$.
+1. Draw a free-body diagram of the cylinder, including the direction you assume for friction.
+2. Write Newton's second law for translation and rotation, using a clear sign convention.
+3. Find the acceleration $a$ of the center of mass.
+4. Find the angular acceleration $\\alpha$.
+5. Find the friction force, including its direction. Is this direction consistent with your assumed rolling motion?`,
+    plainText: `Q5. Rolling cylinder pulled by a string
+A solid cylinder of mass M = 4.0 kg and radius R = 0.20 m rests on a rough horizontal surface. A light string is wound around the cylinder and pulled horizontally to the right at the top with constant force F = 30 N. The cylinder rolls without slipping. Use I = 1/2 * M * R^2.
+1. Draw a free-body diagram of the cylinder, including the direction you assume for friction.
+2. Write Newton's second law for translation and rotation, using a clear sign convention.
+3. Find the acceleration a of the center of mass.
+4. Find the angular acceleration alpha.
+5. Find the friction force, including its direction. Is this direction consistent with your assumed rolling motion?`
+  },
+  {
+    id: "Q6_JUN26",
+    paperId: "JUN26",
+    paperName: "June 26th, 2026",
+    category: "STATICS",
+    categoryName: "Statics & Force Systems",
+    qNum: "Q6",
+    title: "Q6. Ladder with friction and a student",
+    humanText: `A uniform ladder of length $L = 6.0\\text{ m}$ and weight $W_L = 180\\text{ N}$ rests against a smooth frictionless vertical wall and a rough horizontal floor. The ladder makes an angle $\\theta = 65^\\circ$ with the floor. A student of weight $W_S = 620\\text{ N}$ stands $4.2\\text{ m}$ along the ladder, measured from the bottom.
+
+1. Draw a free-body diagram of the ladder.
+2. Find the normal reaction exerted by the wall.
+3. Find the normal reaction and friction force at the floor.
+4. Find the minimum coefficient of static friction required to prevent slipping.
+5. The student moves slowly upward along the ladder. Does the required coefficient of static friction increase, decrease or remain constant? Justify your answer briefly.`,
+    latexText: `Q6. Ladder with friction and a student
+A uniform ladder of length $L = 6.0\\text{ m}$ and weight $W_L = 180\\text{ N}$ rests against a smooth frictionless vertical wall and a rough horizontal floor. The ladder makes an angle $\\theta = 65^\\circ$ with the floor. A student of weight $W_S = 620\\text{ N}$ stands $4.2\\text{ m}$ along the ladder, measured from the bottom.
+1. Draw a free-body diagram of the ladder.
+2. Find the normal reaction exerted by the wall.
+3. Find the normal reaction and friction force at the floor.
+4. Find the minimum coefficient of static friction required to prevent slipping.
+5. The student moves slowly upward along the ladder. Does the required coefficient of static friction increase, decrease or remain constant? Justify your answer briefly.`,
+    plainText: `Q6. Ladder with friction and a student
+A uniform ladder of length L = 6.0 m and weight W_L = 180 N rests against a smooth frictionless vertical wall and a rough horizontal floor. The ladder makes an angle theta = 65 deg with the floor. A student of weight W_S = 620 N stands 4.2 m along the ladder, measured from the bottom.
+1. Draw a free-body diagram of the ladder.
+2. Find the normal reaction exerted by the wall.
+3. Find the normal reaction and friction force at the floor.
+4. Find the minimum coefficient of static friction required to prevent slipping.
+5. The student moves slowly upward along the ladder. Does the required coefficient of static friction increase, decrease or remain constant? Justify your answer briefly.`
+  },
+
+  /* JULY 14th QUESTIONS */
+  {
+    id: "Q1_JUL14",
+    paperId: "JUL14",
+    paperName: "July 14th, 2026",
+    category: "KINEMATICS",
+    categoryName: "Kinematics & Projectiles",
+    qNum: "Q1",
+    title: "Q1. Motion in one dimension with variable acceleration",
+    humanText: `A particle moves along the $x$-axis. At $t = 0$, $x_0 = 0$ and $v_0 = 1.5\\text{ m/s}$. For $0 \\le t \\le 6.0\\text{ s}$, its acceleration is
+$$a(t) = 3.0 - 0.50t$$
+where $a$ is in $\\text{m/s}^2$ and $t$ is in seconds.
+
+1. State the definitions of velocity and acceleration in terms of derivatives of $x(t)$.
+2. Find the velocity $v(t)$.
+3. Find the position $x(t)$.
+4. Find the time at which the velocity is maximum, and find this maximum velocity.
+5. Find the displacement and average velocity over $0 \\le t \\le 6.0\\text{ s}$.`,
+    latexText: `Q1. Motion in one dimension with variable acceleration.
+A particle moves along the $x$-axis. At $t = 0$, $x_{0} = 0$ and $v_{0} = 1.5\\text{ m/s}$. For $0 \\le t \\le 6.0\\text{ s}$, its acceleration is
+$$a(t) = 3.0 - 0.50t$$
+where $a$ is in $\\text{m/s}^{2}$ and $t$ is in seconds.
+1. State the definitions of velocity and acceleration in terms of derivatives of $x(t)$.
+2. Find the velocity $v(t)$.
+3. Find the position $x(t)$.
+4. Find the time at which the velocity is maximum, and find this maximum velocity.
+5. Find the displacement and average velocity over $0 \\le t \\le 6.0\\text{ s}$.`,
+    plainText: `Q1. Motion in one dimension with variable acceleration.
+A particle moves along the x-axis. At t = 0, x_0 = 0 and v_0 = 1.5 m/s. For 0 <= t <= 6.0 s, its acceleration is
+a(t) = 3.0 - 0.50t
+where a is in m/s^2 and t is in seconds.
+1. State the definitions of velocity and acceleration in terms of derivatives of x(t).
+2. Find the velocity v(t).
+3. Find the position x(t).
+4. Find the time at which the velocity is maximum, and find this maximum velocity.
+5. Find the displacement and average velocity over 0 <= t <= 6.0 s.`
+  },
+  {
+    id: "Q2_JUL14",
+    paperId: "JUL14",
+    paperName: "July 14th, 2026",
+    category: "KINEMATICS",
+    categoryName: "Kinematics & Projectiles",
+    qNum: "Q2",
+    title: "Q2. Projectile motion from range and maximum height",
+    humanText: `A projectile is launched from ground level and lands back at ground level. Air resistance is negligible. Its horizontal range is $R = 30.0\\text{ m}$ and its maximum height is $H = 5.00\\text{ m}$.
+
+1. Starting from the constant-acceleration equations, derive:  
+   $$H = \\frac{v_0^2 \\sin^2\\theta}{2g}$$
+2. Starting from the constant-acceleration equations, derive:  
+   $$R = \\frac{v_0^2 \\sin 2\\theta}{g}$$
+3. Use the given values of $R$ and $H$ to find the launch angle $\\theta$.
+4. Find the initial speed $v_0$.
+5. Find the total time of flight.`,
+    latexText: `Q2. Projectile motion from range and maximum height
+A projectile is launched from ground level and lands back at ground level. Air resistance is negligible. Its horizontal range is $R = 30.0\\text{ m}$ and its maximum height is $H = 5.00\\text{ m}$.
+1. Starting from the constant-acceleration equations, derive:  
+     $$H = \\frac{v_{0}^{2} \\sin^{2}\\theta}{2g}$$
+2. Starting from the constant-acceleration equations, derive:  
+     $$R = \\frac{v_{0}^{2} \\sin 2\\theta}{g}$$
+3. Use the given values of $R$ and $H$ to find the launch angle $\\theta$.
+4. Find the initial speed $v_{0}$.
+5. Find the total time of flight.`,
+    plainText: `Q2. Projectile motion from range and maximum height
+A projectile is launched from ground level and lands back at ground level. Air resistance is negligible. Its horizontal range is R = 30.0 m and its maximum height is H = 5.00 m.
+1. Starting from the constant-acceleration equations, derive: H = (v0^2 * sin^2(theta)) / (2g)
+2. Starting from the constant-acceleration equations, derive: R = (v0^2 * sin(2*theta)) / g
+3. Use the given values of R and H to find the launch angle theta.
+4. Find the initial speed v0.
+5. Find the total time of flight.`
+  },
+  {
+    id: "Q3_JUL14",
+    paperId: "JUL14",
+    paperName: "July 14th, 2026",
+    category: "DYNAMICS",
+    categoryName: "Dynamics & Friction",
+    qNum: "Q3",
+    title: "Q3. Atwood machine and subsequent motion",
+    humanText: `Two masses are connected by a light inextensible string over a frictionless pulley. The masses are $m_1 = 3.0\\text{ kg}$ and $m_2 = 5.0\\text{ kg}$. The system is released from rest, with $m_2$ moving downward.
+
+1. Draw free-body diagrams for both masses.
+2. Apply Newton's second law to both masses, choosing a clear sign convention.
+3. Derive an expression for the acceleration in terms of $m_1$, $m_2$, and $g$.
+4. Find the acceleration and the tension in the string.
+5. If $m_2$ descends by $1.20\\text{ m}$ and then hits the floor, find the speed of the masses at that instant. How much farther does $m_1$ rise after the string becomes slack?`,
+    latexText: `Q3. Atwood machine and subsequent motion
+Two masses are connected by a light inextensible string over a frictionless pulley. The masses are $m_{1} = 3.0\\text{ kg}$ and $m_{2} = 5.0\\text{ kg}$. The system is released from rest, with $m_{2}$ moving downward.
+1. Draw free-body diagrams for both masses.
+2. Apply Newton's second law to both masses, choosing a clear sign convention.
+3. Derive an expression for the acceleration in terms of $m_{1}$, $m_{2}$, and $g$.
+4. Find the acceleration and the tension in the string.
+5. If $m_{2}$ descends by $1.20\\text{ m}$ and then hits the floor, find the speed of the masses at that instant. How much farther does the $m_{1}$ rise after the string becomes slack?`,
+    plainText: `Q3. Atwood machine and subsequent motion
+Two masses are connected by a light inextensible string over a frictionless pulley. The masses are m1 = 3.0 kg and m2 = 5.0 kg. The system is released from rest, with m2 moving downward.
+1. Draw free-body diagrams for both masses.
+2. Apply Newton's second law to both masses, choosing a clear sign convention.
+3. Derive an expression for the acceleration in terms of m1, m2, and g.
+4. Find the acceleration and the tension in the string.
+5. If m2 descends by 1.20 m and then hits the floor, find the speed of the masses at that instant. How much farther does m1 rise after the string becomes slack?`
+  },
+  {
+    id: "Q4_JUL14",
+    paperId: "JUL14",
+    paperName: "July 14th, 2026",
+    category: "ENERGY",
+    categoryName: "Work, Energy & Springs",
+    qNum: "Q4",
+    title: "Q4. Vertical spring and energy conservation",
+    humanText: `A block of mass $m = 2.0\\text{ kg}$ is released from rest at a height $h = 0.40\\text{ m}$ above the top of a vertical spring. The spring has constant $k = 800\\text{ N/m}$. Air resistance is negligible.
+
+1. State Hooke's law and the expression for the elastic potential energy stored in a spring.
+2. Write the conservation of energy equation for the block at maximum spring compression.
+3. Find the maximum compression of the spring.
+4. Find the magnitude of the spring force at maximum compression.
+5. At maximum compression, is the net force on the block zero? Justify your answer by comparing the spring force with the weight of the block.`,
+    latexText: `Q4. Vertical spring and energy conservation
+A block of mass $m = 2.0\\text{ kg}$ is released from rest at a height $h = 0.40\\text{ m}$ above the top of a vertical spring. The spring has constant $k = 800\\text{ N/m}$. Air resistance is negligible.
+1. State Hooke's law and the expression for the elastic potential energy stored in a spring.
+2. Write the conservation of energy equation for the block at maximum spring compression.
+3. Find the maximum compression of the spring.
+4. Find the magnitude of the spring force at maximum compression.
+5. At maximum compression, is the net force on the block zero? Justify your answer by comparing the spring force with the weight of the block.`,
+    plainText: `Q4. Vertical spring and energy conservation
+A block of mass m = 2.0 kg is released from rest at a height h = 0.40 m above the top of a vertical spring. The spring has constant k = 800 N/m. Air resistance is negligible.
+1. State Hooke's law and the expression for the elastic potential energy stored in a spring.
+2. Write the conservation of energy equation for the block at maximum spring compression.
+3. Find the maximum compression of the spring.
+4. Find the magnitude of the spring force at maximum compression.
+5. At maximum compression, is the net force on the block zero? Justify your answer by comparing the spring force with the weight of the block.`
+  },
+  {
+    id: "Q5_JUL14",
+    paperId: "JUL14",
+    paperName: "July 14th, 2026",
+    category: "STATICS",
+    categoryName: "Statics & Force Systems",
+    qNum: "Q5",
+    title: "Q5. Static equilibrium of a beam",
+    humanText: `A uniform horizontal beam of length $L = 4.0\\text{ m}$ and weight $W_B = 120\\text{ N}$ is attached to a vertical wall by a hinge at its left end. A cable attached to the right end makes an angle of $40^\circ$ above the horizontal. A load of weight $W = 280\\text{ N}$ hangs from the beam at a distance $3.0\\text{ m}$ from the hinge.
+
+1. State the two conditions for static equilibrium of a rigid body.
+2. Draw a free-body diagram of the beam.
+3. Taking torques about the hinge, find the tension in the cable.
+4. Find the horizontal and vertical components of the force exerted by the hinge on the beam.
+5. Explain briefly why taking torques about the hinge is a convenient choice.`,
+    latexText: `Q5. Static equilibrium of a beam
+A uniform horizontal beam of length $L = 4.0\\text{ m}$ and weight $W_{B} = 120\\text{ N}$ is attached to a vertical wall by a hinge at its left end. A cable attached to the right end makes an angle of $40^{\\circ}$ above the horizontal. A load of weight $W = 280\\text{ N}$ hangs from the beam at a distance $3.0\\text{ m}$ from the hinge.
+1. State the two conditions for static equilibrium of a rigid body.
+2. Draw a free-body diagram of the beam.
+3. Taking torques about the hinge, find the tension in the cable.
+4. Find the horizontal and vertical components of the force exerted by the hinge on the beam.
+5. Explain briefly why taking torques about the hinge is a convenient choice.`,
+    plainText: `Q5. Static equilibrium of a beam
+A uniform horizontal beam of length L = 4.0 m and weight W_B = 120 N is attached to a vertical wall by a hinge at its left end. A cable attached to the right end makes an angle of 40 deg above the horizontal. A load of weight W = 280 N hangs from the beam at a distance 3.0 m from the hinge.
+1. State the two conditions for static equilibrium of a rigid body.
+2. Draw a free-body diagram of the beam.
+3. Taking torques about the hinge, find the tension in the cable.
+4. Find the horizontal and vertical components of the force exerted by the hinge on the beam.
+5. Explain briefly why taking torques about the hinge is a convenient choice.`
+  },
+  {
+    id: "Q6_JUL14",
+    paperId: "JUL14",
+    paperName: "July 14th, 2026",
+    category: "ROTATION",
+    categoryName: "Rotational Dynamics & Rolling",
+    qNum: "Q6",
+    title: "Q6. Rotational dynamics of a disk",
+    humanText: `A uniform solid disk of mass $M = 6.0\\text{ kg}$ and radius $R = 0.25\\text{ m}$ is mounted on a frictionless axle through its centre. The disk is initially at rest. A constant tangential force $F = 18\\text{ N}$ is applied at the rim for $t = 5.0\\text{ s}$. Use $I = \\frac{1}{2}MR^2$.
+
+1. State Newton's second law for rotational motion and define the quantities involved.
+2. Find the torque exerted by the applied force.
+3. Find the angular acceleration of the disk.
+4. Find the angular speed after $5.0\\text{ s}$ and the angle through which it has turned.
+5. Find the work done by the applied force and show that it equals the final rotational kinetic energy.`,
+    latexText: `Q6. Rotational dynamics of a disk
+A uniform solid disk of mass $M = 6.0\\text{ kg}$ and radius $R = 0.25\\text{ m}$ is mounted on a frictionless axle through its centre. The disk is initially at rest. A constant tangential force $F = 18\\text{ N}$ is applied at the rim for $t = 5.0\\text{ s}$. Use $I = \\frac{1}{2}MR^{2}$.
+1. State Newton's second law for rotational motion and define the quantities involved.
+2. Find the torque exerted by the applied force.
+3. Find the angular acceleration of the disk.
+4. Find the angular speed after $5.0\\text{ s}$ and the angle through which it has turned.
+5. Find the work done by the applied force and show that it equals the final rotational kinetic energy.`,
+    plainText: `Q6. Rotational dynamics of a disk
+A uniform solid disk of mass M = 6.0 kg and radius R = 0.25 m is mounted on a frictionless axle through its centre. The disk is initially at rest. A constant tangential force F = 18 N is applied at the rim for t = 5.0 s. Use I = 1/2 * M * R^2.
+1. State Newton's second law for rotational motion and define the quantities involved.
+2. Find the torque exerted by the applied force.
+3. Find the angular acceleration of the disk.
+4. Find the angular speed after 5.0 s and the angle through which it has turned.
+5. Find the work done by the applied force and show that it equals the final rotational kinetic energy.`
+  }
+];
+
+/**
+ * Global Application State
+ */
+let currentTheme = localStorage.getItem('deck_theme') || 'dark';
+let currentSortMode = localStorage.getItem('deck_sort') || 'paper';
+let globalDisplayFormat = localStorage.getItem('deck_display_fmt') || 'human';
+let globalButtonFormat = localStorage.getItem('deck_button_fmt') || 'latex';
+
+// Store generated DOM nodes for questions to preserve MathJax rendering across re-sorts
+const questionNodesMap = new Map();
+
+/**
+ * MathJax Typesetting Helpers
+ */
+function typesetMath(elements) {
+  if (isMathJaxReady && window.MathJax && MathJax.typesetPromise) {
+    MathJax.typesetPromise(elements).catch(err => console.error('MathJax error:', err));
+  }
+}
+
+function clearMathTypeset(elements) {
+  if (isMathJaxReady && window.MathJax && MathJax.typesetClear) {
+    try {
+      MathJax.typesetClear(elements);
+    } catch(e) {}
+  }
+}
+
+function typesetAllHumanCards() {
+  const humanContainers = document.querySelectorAll('.prob-text.tex2jax_process');
+  if (humanContainers.length > 0) {
+    typesetMath(Array.from(humanContainers));
+  }
+}
+
+/**
+ * Format Human text into clean structured HTML paragraphs and lists
+ */
+function formatHumanText(text) {
+  if (!text) return '';
+  const lines = text.split('\n');
+  let html = '';
+  let inList = false;
+  let listType = null;
+
+  lines.forEach(line => {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      if (inList) {
+        html += listType === 'ul' ? '</ul>' : '</ol>';
+        inList = false;
+      }
+      return;
     }
 
-    // Check URL hash
-    handleHashNavigation();
-
-    // Listen for hash changes
-    window.addEventListener('hashchange', handleHashNavigation);
+    if (trimmed.startsWith('•') || trimmed.startsWith('- ')) {
+      if (!inList || listType !== 'ul') {
+        if (inList) html += listType === 'ul' ? '</ul>' : '</ol>';
+        html += '<ul class="prob-bullet-list">';
+        inList = true;
+        listType = 'ul';
+      }
+      const content = trimmed.replace(/^[•\-]\s*/, '');
+      html += `<li>${content}</li>`;
+    } else if (/^\d+\.\s/.test(trimmed)) {
+      if (!inList || listType !== 'ol') {
+        if (inList) html += listType === 'ul' ? '</ul>' : '</ol>';
+        html += '<ol class="prob-num-list">';
+        inList = true;
+        listType = 'ol';
+      }
+      const content = trimmed.replace(/^\d+\.\s*/, '');
+      html += `<li>${content}</li>`;
+    } else {
+      if (inList) {
+        html += listType === 'ul' ? '</ul>' : '</ol>';
+        inList = false;
+      }
+      html += `<p>${trimmed}</p>`;
+    }
   });
 
-  // 4. THEME CONTROLLER
-  function setTheme(t) {
-    currentTheme = t;
-    const htmlEl = document.documentElement;
-    htmlEl.classList.remove('dark', 'light');
-    htmlEl.classList.add(t);
-    const icon = document.querySelector('.theme-icon');
-    if (icon) icon.textContent = t === 'dark' ? '☾' : '☀';
-    localStorage.setItem('phys_deck_theme', t);
+  if (inList) {
+    html += listType === 'ul' ? '</ul>' : '</ol>';
   }
 
-  function toggleTheme() {
-    setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+  return html;
+}
+
+/**
+ * Initialization
+ */
+document.addEventListener('DOMContentLoaded', () => {
+  // Apply initial theme
+  applyTheme(currentTheme);
+
+  // Synchronize initial UI segmented controls
+  updateSegmentedUI('sortControl', currentSortMode);
+  updateSegmentedUI('displayControl', globalDisplayFormat);
+  updateSegmentedUI('buttonControl', globalButtonFormat);
+
+  // Build element DOM nodes for all questions
+  buildAllQuestionDOMNodes();
+
+  // Initial deck build
+  renderDeck();
+
+  // Build drawer contents
+  renderDrawerContent();
+
+  // Check URL hash for direct links
+  if (window.location.hash) {
+    setTimeout(handleHashNavigation, 200);
   }
+});
 
-  // 5. DOM STRUCTURE INITIALIZATION (Build once, move nodes on sort)
-  function initDOMStructures() {
-    // 1. Create all question <li> elements once
-    QUESTIONS_DATA.forEach((q, idx) => {
-      const card = createQuestionCard(q, idx);
-      questionCardElements.set(q.id, card);
-    });
+window.addEventListener('hashchange', handleHashNavigation);
 
-    // 2. Create Paper Section wrappers
-    PAPERS_DATA.forEach(paper => {
-      const sec = document.createElement('section');
-      sec.className = 'topic-section';
-      sec.id = paper.id;
-      const paperQs = QUESTIONS_DATA.filter(q => q.paper_id === paper.id);
-
-      sec.innerHTML = `
-        <div class="section-header">
-          <div class="section-meta-line">
-            <span class="badge">${paper.badge}</span>
-            <span>${paperQs.length} questions</span>
-            <span>·</span>
-            <a href="#${paper.id}" class="section-anchor-link">#${paper.id}</a>
-          </div>
-          <h2>${paper.date}</h2>
-          <p class="section-instruction">${paper.desc}</p>
-        </div>
-        <ol class="prob-list"></ol>
-      `;
-      paperSectionsMap.set(paper.id, sec);
-    });
-
-    // 3. Create Category Section wrappers
-    CATEGORIES_DATA.forEach(cat => {
-      const sec = document.createElement('section');
-      sec.className = 'topic-section';
-      sec.id = cat.id;
-      const catQs = QUESTIONS_DATA.filter(q => q.category === cat.key);
-
-      sec.innerHTML = `
-        <div class="section-header">
-          <div class="section-meta-line">
-            <span class="badge">${cat.icon} Topic Category</span>
-            <span>${catQs.length} questions across all papers</span>
-            <span>·</span>
-            <a href="#${cat.id}" class="section-anchor-link">#${cat.id}</a>
-          </div>
-          <h2>${cat.title}</h2>
-          <p class="section-instruction">${cat.desc}</p>
-        </div>
-        <ol class="prob-list"></ol>
-      `;
-      categorySectionsMap.set(cat.id, sec);
-    });
-  }
-
-  // 6. SORTING SYSTEM: INSTANT ZERO-FLICKER NODE MOVING
-  function setSortMode(mode) {
-    if (currentSort === mode) return;
-    currentSort = mode;
-
-    // Update active sort button
-    document.querySelectorAll('.control-deck [data-sort]').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.sort === mode);
-    });
-
-    applySortDisplay();
-
-    // Smooth scroll to top of content
-    const contentEl = document.getElementById('deckContent');
-    if (contentEl) {
-      const topPos = contentEl.getBoundingClientRect().top + window.pageYOffset - 90;
-      window.scrollTo({ top: topPos, behavior: 'smooth' });
-    }
-  }
-
-  function applySortDisplay() {
-    const container = document.getElementById('deckContent');
-    const pillsNav = document.getElementById('smartNavPills');
-    if (!container || !pillsNav) return;
-
-    container.innerHTML = '';
-    pillsNav.innerHTML = '';
-
-    if (currentSort === 'paper') {
-      // 1. Re-populate quick navigation pills
-      PAPERS_DATA.forEach(paper => {
-        const pill = document.createElement('a');
-        pill.className = 'nav-chip';
-        pill.href = '#' + paper.id;
-        pill.innerHTML = `<span>📅</span> ${paper.date}`;
-        pillsNav.appendChild(pill);
-      });
-
-      // 2. Move existing <li> nodes into paper sections
-      PAPERS_DATA.forEach(paper => {
-        const sec = paperSectionsMap.get(paper.id);
-        const ol = sec.querySelector('.prob-list');
-        ol.innerHTML = ''; // Clear ol container
-        const paperQs = QUESTIONS_DATA.filter(q => q.paper_id === paper.id);
-        paperQs.forEach(q => {
-          const card = questionCardElements.get(q.id);
-          if (card) ol.appendChild(card); // MOVES the node, preserving MathJax & event handlers
-        });
-        container.appendChild(sec);
-      });
-
-    } else {
-      // 1. Re-populate quick navigation pills
-      CATEGORIES_DATA.forEach(cat => {
-        const pill = document.createElement('a');
-        pill.className = 'nav-chip';
-        pill.href = '#' + cat.id;
-        pill.innerHTML = `<span>${cat.icon}</span> ${cat.title}`;
-        pillsNav.appendChild(pill);
-      });
-
-      // 2. Move existing <li> nodes into category sections
-      CATEGORIES_DATA.forEach(cat => {
-        const sec = categorySectionsMap.get(cat.id);
-        const ol = sec.querySelector('.prob-list');
-        ol.innerHTML = ''; // Clear ol container
-        const catQs = QUESTIONS_DATA.filter(q => q.category === cat.key);
-        catQs.forEach(q => {
-          const card = questionCardElements.get(q.id);
-          if (card) ol.appendChild(card); // MOVES the node, preserving MathJax & event handlers
-        });
-        container.appendChild(sec);
-      });
-    }
-  }
-
-  // 7. THREE-FORMAT SELECTION (Affects Buttons & Display View)
-  function setGlobalFormat(fmt) {
-    currentFormat = fmt;
-
-    // Update active format button
-    document.querySelectorAll('.control-deck [data-format]').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.format === fmt);
-    });
-
-    // Update all question cards display view
-    document.querySelectorAll('.prob-item').forEach(card => {
-      card.setAttribute('data-view', fmt);
-      card.querySelectorAll('.pv-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.view === fmt);
-      });
-    });
-
-    // Update format badges on buttons
-    updateFormatButtons();
-  }
-
-  function setCardView(btn, view) {
-    const card = btn.closest('.prob-item');
-    if (!card) return;
-    card.setAttribute('data-view', view);
-    card.querySelectorAll('.pv-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.view === view);
-    });
-  }
-
-  function updateFormatButtons() {
-    const badgeText = currentFormat.toUpperCase();
-    document.querySelectorAll('.btn-format-badge').forEach(badge => {
-      badge.textContent = badgeText;
-    });
-  }
-
-  // Create individual question card DOM
-  function createQuestionCard(q, idx) {
+/**
+ * Build single DOM node per question
+ */
+function buildAllQuestionDOMNodes() {
+  QUESTIONS_DATA.forEach(q => {
     const li = document.createElement('li');
     li.className = 'prob-item';
     li.id = q.id;
-    li.dataset.paper = q.paper_id;
-    li.dataset.category = q.category;
-    li.setAttribute('data-view', currentFormat);
-
-    const escAttr = (str) => (str || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    li.setAttribute('data-paper', q.paperId);
+    li.setAttribute('data-category', q.category);
 
     li.innerHTML = `
       <div class="prob-num-wrap">
         <div class="prob-num"></div>
-        <a href="#${q.id}" class="prob-anchor" title="Direct Anchor Link">#${q.q_num}</a>
+        <a href="#${q.id}" class="prob-anchor">#${q.qNum}</a>
       </div>
       <div class="prob-content">
         <div class="prob-header-meta">
-          <div class="prob-tags">
-            <span class="prob-tag category">${q.category}</span>
-            <span class="prob-tag">${q.paper_date} · Q${q.q_num}</span>
+          <div class="tags-group">
+            <span class="prob-tag category">${q.categoryName}</span>
+            <span class="prob-tag">${q.paperName} &bull; ${q.qNum}</span>
           </div>
-          <div class="prob-view-switcher" role="tablist" aria-label="Question View">
-            <button class="pv-btn ${currentFormat === 'human' ? 'active' : ''}" data-view="human" onclick="setCardView(this, 'human')" title="Rendered Exam Typography">Rendered</button>
-            <button class="pv-btn ${currentFormat === 'latex' ? 'active' : ''}" data-view="latex" onclick="setCardView(this, 'latex')" title="LaTeX Source Code">LaTeX</button>
-            <button class="pv-btn ${currentFormat === 'plain' ? 'active' : ''}" data-view="plain" onclick="setCardView(this, 'plain')" title="Plain ASCII Text">Plain</button>
+          <div class="card-format-switch">
+            <button onclick="setCardDisplayFormat(this, 'human')" class="${globalDisplayFormat === 'human' ? 'active' : ''}">Human</button>
+            <button onclick="setCardDisplayFormat(this, 'latex')" class="${globalDisplayFormat === 'latex' ? 'active' : ''}">LaTeX</button>
+            <button onclick="setCardDisplayFormat(this, 'plain')" class="${globalDisplayFormat === 'plain' ? 'active' : ''}">Plain</button>
           </div>
         </div>
-
-        <!-- 1. Human-Readable Math View (Exam/Book typography) -->
-        <div class="prob-text view-human">
-          ${q.human_html}
-        </div>
-
-        <!-- 2. Raw LaTeX Code View -->
-        <div class="view-latex"><code>${escAttr(q.raw_latex)}</code></div>
-
-        <!-- 3. Clean Plain Text View -->
-        <div class="view-plain"><code>${escAttr(q.plain_text)}</code></div>
-
-        <!-- 4 Action Buttons Quad -->
+        <div class="prob-text tex2jax_process" data-view="${globalDisplayFormat}"></div>
         <div class="btn-group">
-          <button class="btn-action copy-btn" onclick="handleCopy(this)"
-                  data-latex="${escAttr(q.raw_latex)}"
-                  data-plain="${escAttr(q.plain_text)}"
-                  data-human="${escAttr(q.unicode_text)}"
-                  aria-label="Copy question in active format">
-            <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-            <span class="btn-label">COPY</span>
-            <span class="btn-format-badge">${currentFormat.toUpperCase()}</span>
-          </button>
-
-          <button class="btn-action solve-btn" onclick="handleSolve(this)"
-                  data-latex="${escAttr(q.raw_latex)}"
-                  data-plain="${escAttr(q.search_query)}"
-                  data-human="${escAttr(q.search_query)}"
-                  aria-label="Search question on Google">
-            <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-            <span>GOOGLE</span>
-          </button>
-
-          <button class="btn-action perp-btn" onclick="handlePerplexity(this)"
-                  data-latex="${escAttr(q.raw_latex)}"
-                  data-plain="${escAttr(q.search_query)}"
-                  data-human="${escAttr(q.search_query)}"
-                  aria-label="Ask question on Perplexity AI">
-            <svg viewBox="0 0 24 24"><path d="M22 12L13.6 4v4.5H9.4C6.4 8.5 4 10.9 4 14s2.4 5.5 5.4 5.5h1.1V22L22 12zM9.4 17.5c-1.9 0-3.4-1.5-3.4-3.5s1.5-3.5 3.4-3.5h4.2v3.3L17.1 12l-3.5-3.8V10H9.4z"/></svg>
-            <span>ASK</span>
-          </button>
-
-          <button class="btn-action brave-btn" onclick="handleBrave(this)"
-                  data-latex="${escAttr(q.raw_latex)}"
-                  data-plain="${escAttr(q.search_query)}"
-                  data-human="${escAttr(q.search_query)}"
-                  aria-label="Search question on Brave Search">
-            <svg viewBox="0 0 24 24"><path d="M12 2L3 6v5c0 5.25 3.75 10.15 9 11.25C17.25 21.15 21 16.25 21 11V6L12 2z"/></svg>
-            <span>BRAVE</span>
-          </button>
+          <button class="action-btn copy-btn"  onclick="handleCopy(this)"       data-latex="${escapeHtml(q.latexText)}" data-plain="${escapeHtml(q.plainText)}" data-human="${escapeHtml(q.humanText)}">Copy</button>
+          <button class="action-btn solve-btn" onclick="handleSolve(this)"      data-latex="${escapeHtml(q.latexText)}" data-plain="${escapeHtml(q.plainText)}" data-human="${escapeHtml(q.humanText)}">Google</button>
+          <button class="action-btn perp-btn"  onclick="handlePerplexity(this)" data-latex="${escapeHtml(q.latexText)}" data-plain="${escapeHtml(q.plainText)}" data-human="${escapeHtml(q.humanText)}">Ask</button>
+          <button class="action-btn brave-btn" onclick="handleBrave(this)"      data-latex="${escapeHtml(q.latexText)}" data-plain="${escapeHtml(q.plainText)}" data-human="${escapeHtml(q.humanText)}">Brave</button>
+          <button class="action-btn chat-btn"  onclick="handleChatGPT(this)"    data-latex="${escapeHtml(q.latexText)}" data-plain="${escapeHtml(q.plainText)}" data-human="${escapeHtml(q.humanText)}">ChatGPT</button>
         </div>
       </div>
     `;
 
-    return li;
+    // Set initial text content
+    updateCardText(li, q, globalDisplayFormat);
+    questionNodesMap.set(q.id, li);
+  });
+}
+
+/**
+ * Escape string for HTML attribute
+ */
+function escapeHtml(str) {
+  return str.replace(/&/g, "&amp;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+}
+
+/**
+ * Update single card display text and format button active states
+ */
+function updateCardText(cardElement, qData, format) {
+  const textContainer = cardElement.querySelector('.prob-text');
+  textContainer.setAttribute('data-view', format);
+  
+  if (format === 'human') {
+    textContainer.className = 'prob-text tex2jax_process';
+    textContainer.innerHTML = formatHumanText(qData.humanText);
+    typesetMath([textContainer]);
+  } else if (format === 'latex') {
+    clearMathTypeset([textContainer]);
+    textContainer.className = 'prob-text tex2jax_ignore';
+    textContainer.innerHTML = `<pre class="code-view"><code>${escapeHtml(qData.latexText)}</code></pre>`;
+  } else {
+    clearMathTypeset([textContainer]);
+    textContainer.className = 'prob-text tex2jax_ignore';
+    textContainer.innerHTML = `<pre class="code-view"><code>${escapeHtml(qData.plainText)}</code></pre>`;
   }
 
-  // 8. BUTTON ACTIONS WITH THREE FORMAT SUPPORT
-  function getPayloadForFormat(btn, fmt) {
-    if (fmt === 'latex') return btn.getAttribute('data-latex') || '';
-    if (fmt === 'plain') return btn.getAttribute('data-plain') || '';
-    if (fmt === 'human') return btn.getAttribute('data-human') || '';
-    return btn.getAttribute('data-latex') || '';
-  }
-
-  function handleCopy(btn) {
-    const text = getPayloadForFormat(btn, currentFormat);
-    const labelSpan = btn.querySelector('.btn-label');
-    const origText = labelSpan ? labelSpan.textContent : 'COPY';
-
-    const onSuccess = () => {
-      if (labelSpan) labelSpan.textContent = '✓ COPIED';
-      setTimeout(() => {
-        if (labelSpan) labelSpan.textContent = origText;
-      }, 1600);
-    };
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(onSuccess).catch(() => fallbackCopy(text, onSuccess));
+  // Sync internal card override switches
+  const buttons = cardElement.querySelectorAll('.card-format-switch button');
+  buttons.forEach(btn => {
+    if (btn.textContent.toLowerCase() === format) {
+      btn.classList.add('active');
     } else {
-      fallbackCopy(text, onSuccess);
+      btn.classList.remove('active');
     }
-  }
+  });
+}
 
-  function fallbackCopy(text, cb) {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.top = '-9999px';
-    document.body.appendChild(ta);
-    ta.focus();
-    ta.select();
-    try {
-      document.execCommand('copy');
-      if (cb) cb();
-    } catch (e) {
-      console.warn('Copy failed:', e);
+/**
+ * Set individual card format display override
+ */
+function setCardDisplayFormat(btn, format) {
+  const card = btn.closest('.prob-item');
+  const qId = card.id;
+  const qData = QUESTIONS_DATA.find(q => q.id === qId);
+
+  card.setAttribute('data-card-display', format);
+  updateCardText(card, qData, format);
+}
+
+/**
+ * Render main Deck Content according to current sort mode
+ */
+function renderDeck() {
+  const container = document.getElementById('deckContent');
+  container.innerHTML = '';
+
+  const navPillsContainer = document.getElementById('smartNavPills');
+  navPillsContainer.innerHTML = '';
+
+  if (currentSortMode === 'paper') {
+    PAPERS_DATA.forEach(paper => {
+      const paperQuestions = QUESTIONS_DATA.filter(q => q.paperId === paper.id);
+      if (paperQuestions.length === 0) return;
+
+      // Add Nav Pill
+      const pill = document.createElement('a');
+      pill.className = 'nav-pill';
+      pill.href = `#paper-${paper.id}`;
+      pill.textContent = `${paper.shortName} (${paperQuestions.length})`;
+      navPillsContainer.appendChild(pill);
+
+      // Section Wrapper
+      const section = document.createElement('section');
+      section.className = 'topic-section';
+      section.id = `paper-${paper.id}`;
+
+      section.innerHTML = `
+        <h2>
+          <span>${paper.title}</span>
+          <span class="section-count">${paperQuestions.length} Questions</span>
+        </h2>
+      `;
+
+      const ul = document.createElement('ul');
+      ul.className = 'prob-list';
+
+      paperQuestions.forEach(q => {
+        const node = questionNodesMap.get(q.id);
+        ul.appendChild(node);
+      });
+
+      section.appendChild(ul);
+      container.appendChild(section);
+    });
+
+  } else {
+    // Category Sort Mode
+    CATEGORIES_DATA.forEach(cat => {
+      const catQuestions = QUESTIONS_DATA.filter(q => q.category === cat.id);
+      if (catQuestions.length === 0) return;
+
+      // Add Nav Pill
+      const pill = document.createElement('a');
+      pill.className = 'nav-pill';
+      pill.href = `#cat-${cat.id}`;
+      pill.textContent = `${cat.title} (${catQuestions.length})`;
+      navPillsContainer.appendChild(pill);
+
+      // Section Wrapper
+      const section = document.createElement('section');
+      section.className = 'topic-section';
+      section.id = `cat-${cat.id}`;
+
+      section.innerHTML = `
+        <h2>
+          <span>${cat.title}</span>
+          <span class="section-count">${catQuestions.length} Questions</span>
+        </h2>
+      `;
+
+      const ul = document.createElement('ul');
+      ul.className = 'prob-list';
+
+      catQuestions.forEach(q => {
+        const node = questionNodesMap.get(q.id);
+        ul.appendChild(node);
+      });
+
+      section.appendChild(ul);
+      container.appendChild(section);
+    });
+  }
+}
+
+/**
+ * Controls & State Switchers
+ */
+function setSortMode(mode) {
+  currentSortMode = mode;
+  localStorage.setItem('deck_sort', mode);
+  updateSegmentedUI('sortControl', mode);
+  renderDeck();
+}
+
+function setGlobalDisplayFormat(fmt) {
+  globalDisplayFormat = fmt;
+  localStorage.setItem('deck_display_fmt', fmt);
+  updateSegmentedUI('displayControl', fmt);
+
+  // Update all cards without individual overrides
+  QUESTIONS_DATA.forEach(q => {
+    const node = questionNodesMap.get(q.id);
+    if (!node.hasAttribute('data-card-display')) {
+      updateCardText(node, q, fmt);
     }
-    document.body.removeChild(ta);
-  }
+  });
+}
 
-  function handleSolve(btn) {
-    const q = getPayloadForFormat(btn, currentFormat);
-    window.open('https://www.google.com/search?q=' + encodeURIComponent(q) + '&udm=50', '_blank', 'noopener,noreferrer');
-  }
+function setGlobalButtonFormat(fmt) {
+  globalButtonFormat = fmt;
+  localStorage.setItem('deck_button_fmt', fmt);
+  updateSegmentedUI('buttonControl', fmt);
+}
 
-  function handlePerplexity(btn) {
-    const q = getPayloadForFormat(btn, currentFormat);
-    window.open('https://www.perplexity.ai/search?q=' + encodeURIComponent(q), '_blank', 'noopener,noreferrer');
-  }
+function forceAllDisplay() {
+  QUESTIONS_DATA.forEach(q => {
+    const node = questionNodesMap.get(q.id);
+    node.removeAttribute('data-card-display');
+    updateCardText(node, q, globalDisplayFormat);
+  });
+}
 
-  function handleBrave(btn) {
-    const q = getPayloadForFormat(btn, currentFormat);
-    window.open('https://search.brave.com/ask?q=' + encodeURIComponent(q), '_blank', 'noopener,noreferrer');
-  }
+function forceAllButton() {
+  QUESTIONS_DATA.forEach(q => {
+    const node = questionNodesMap.get(q.id);
+    node.removeAttribute('data-card-button');
+  });
+}
 
-  // 9. SMART NAVIGATION DRAWER & ANCHOR DEEP-LINKING
-  function toggleNavDrawer(forceOpen) {
-    const drawer = document.getElementById('navDrawer');
-    const overlay = document.getElementById('drawerOverlay');
-    const isOpen = drawer.classList.contains('open');
-    const shouldOpen = forceOpen !== undefined ? forceOpen : !isOpen;
-
-    drawer.classList.toggle('open', shouldOpen);
-    overlay.classList.toggle('open', shouldOpen);
-
-    if (shouldOpen) {
-      const input = document.getElementById('drawerSearchInput');
-      if (input) {
-        input.value = '';
-        input.focus();
-        filterDrawerNav('');
-      }
+function updateSegmentedUI(containerId, activeVal) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const buttons = container.querySelectorAll('button');
+  buttons.forEach(btn => {
+    if (btn.getAttribute('data-value') === activeVal) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
     }
+  });
+}
+
+/**
+ * Theme Switcher Logic
+ */
+function applyTheme(theme) {
+  currentTheme = theme;
+  localStorage.setItem('deck_theme', theme);
+  const root = document.documentElement;
+  root.className = theme;
+
+  const btn = document.getElementById('themeToggleBtn');
+  if (btn) {
+    btn.innerHTML = theme === 'dark' ? '<span>🌙</span> Dark' : '<span>☀️</span> Light';
   }
+}
 
-  function renderDrawerNav() {
-    const body = document.getElementById('drawerNavBody');
-    if (!body) return;
+function toggleTheme() {
+  applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+}
 
-    let html = '';
+/**
+ * Action Buttons Payload Retrieval and Execution
+ */
+function getPayloadForCard(btn) {
+  const card = btn.closest('.prob-item');
+  // Check card override or global setting (defaults to 'latex')
+  const fmt = card.getAttribute('data-card-button') || globalButtonFormat || 'latex';
+  return btn.getAttribute('data-' + fmt) || btn.getAttribute('data-latex') || '';
+}
 
-    // 1. Papers
-    html += '<div class="drawer-section-title">Exam Papers</div>';
-    PAPERS_DATA.forEach(p => {
-      const qCount = QUESTIONS_DATA.filter(q => q.paper_id === p.id).length;
-      html += `
-        <a href="#${p.id}" class="drawer-item" onclick="toggleNavDrawer(false)">
-          <span>📅 ${p.date}</span>
-          <span class="drawer-badge">${qCount} Qs</span>
-        </a>
-      `;
-    });
+function handleCopy(btn) {
+  const text = getPayloadForCard(btn);
+  navigator.clipboard.writeText(text).then(() => {
+    const origText = btn.textContent;
+    btn.textContent = '✓ Copied!';
+    setTimeout(() => { btn.textContent = origText; }, 1600);
+  }).catch(() => {
+    fallbackCopy(text);
+  });
+}
 
-    // 2. Categories
-    html += '<div class="drawer-section-title">Topic Categories</div>';
-    CATEGORIES_DATA.forEach(c => {
-      const qCount = QUESTIONS_DATA.filter(q => q.category === c.key).length;
-      html += `
-        <a href="#${c.id}" class="drawer-item" onclick="toggleNavDrawer(false)">
-          <span>${c.icon} ${c.title}</span>
-          <span class="drawer-badge">${qCount} Qs</span>
-        </a>
-      `;
-    });
+function fallbackCopy(text) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.select();
+  document.execCommand("copy");
+  document.body.removeChild(textArea);
+  alert("Question copied to clipboard!");
+}
 
-    // 3. Quick Question Jump List
-    html += '<div class="drawer-section-title">All 12 Questions (#ID)</div>';
-    QUESTIONS_DATA.forEach(q => {
-      html += `
-        <a href="#${q.id}" class="drawer-item q-item" data-search="${(q.plain_text + ' ' + q.category + ' ' + q.paper_date).toLowerCase()}" onclick="toggleNavDrawer(false)">
-          <span><strong>#${q.id}</strong> · ${q.category}</span>
-          <span class="drawer-badge">${q.paper_date.split(' ')[0]} ${q.paper_date.split(' ')[1] || ''}</span>
-        </a>
-      `;
-    });
+function handleSolve(btn) {
+  const q = getPayloadForCard(btn);
+  window.open('https://www.google.com/search?q=' + encodeURIComponent(q) + '&udm=50', '_blank', 'noopener,noreferrer');
+}
 
-    body.innerHTML = html;
+function handlePerplexity(btn) {
+  const q = getPayloadForCard(btn);
+  window.open('https://www.perplexity.ai/search?q=' + encodeURIComponent(q), '_blank', 'noopener,noreferrer');
+}
+
+function handleBrave(btn) {
+  const q = getPayloadForCard(btn);
+  window.open('https://search.brave.com/ask?q=' + encodeURIComponent(q), '_blank', 'noopener,noreferrer');
+}
+
+function handleChatGPT(btn) {
+  const q = getPayloadForCard(btn);
+  window.open('https://chatgpt.com/?q=' + encodeURIComponent(q), '_blank', 'noopener,noreferrer');
+}
+
+/**
+ * Navigation Drawer System
+ */
+function toggleDrawer() {
+  const drawer = document.getElementById('navDrawer');
+  const overlay = document.getElementById('drawerOverlay');
+  drawer.classList.toggle('active');
+  overlay.classList.toggle('active');
+}
+
+function renderDrawerContent() {
+  const content = document.getElementById('drawerContent');
+  content.innerHTML = `
+    <div>
+      <div class="drawer-section-title">Papers</div>
+      <ul class="drawer-list">
+        ${PAPERS_DATA.map(p => {
+          const count = QUESTIONS_DATA.filter(q => q.paperId === p.id).length;
+          return `<li class="drawer-list-item"><a href="#paper-${p.id}" onclick="toggleDrawer()">${p.shortName} <span class="count">${count} questions</span></a></li>`;
+        }).join('')}
+      </ul>
+    </div>
+
+    <div>
+      <div class="drawer-section-title">Topics & Categories</div>
+      <ul class="drawer-list">
+        ${CATEGORIES_DATA.map(c => {
+          const count = QUESTIONS_DATA.filter(q => q.category === c.id).length;
+          return `<li class="drawer-list-item"><a href="#cat-${c.id}" onclick="toggleDrawer()">${c.title} <span class="count">${count} questions</span></a></li>`;
+        }).join('')}
+      </ul>
+    </div>
+
+    <div>
+      <div class="drawer-section-title">All Questions</div>
+      <ul class="drawer-list" id="drawerQuestionsList">
+        ${QUESTIONS_DATA.map(q => `
+          <li class="drawer-list-item" data-search="${q.title.toLowerCase()} ${q.paperName.toLowerCase()} ${q.plainText.toLowerCase()}">
+            <a href="#${q.id}" onclick="toggleDrawer()">${q.title} <span class="count">#${q.qNum}</span></a>
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+  `;
+}
+
+function filterDrawerItems() {
+  const query = document.getElementById('drawerSearchInput').value.toLowerCase();
+  const items = document.querySelectorAll('#drawerQuestionsList .drawer-list-item');
+
+  items.forEach(item => {
+    const text = item.getAttribute('data-search');
+    if (text.includes(query)) {
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+
+function handleHashNavigation() {
+  const hash = window.location.hash;
+  if (!hash) return;
+
+  const id = hash.replace('#', '');
+  const target = document.getElementById(id);
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-
-  function filterDrawerNav(query) {
-    const q = (query || '').toLowerCase().trim();
-    const items = document.querySelectorAll('.drawer-body .drawer-item');
-    items.forEach(item => {
-      if (!q) {
-        item.style.display = 'flex';
-        return;
-      }
-      const searchTarget = (item.getAttribute('data-search') || item.textContent).toLowerCase();
-      item.style.display = searchTarget.includes(q) ? 'flex' : 'none';
-    });
-  }
-
-  // Handle URL hash navigation (#id)
-  function handleHashNavigation() {
-    const hash = window.location.hash.slice(1);
-    if (!hash) return;
-
-    setTimeout(() => {
-      const target = document.getElementById(hash);
-      if (target) {
-        if (hash.startsWith('cat-') && currentSort !== 'category') {
-          setSortMode('category');
-          return;
-        } else if (hash.startsWith('apr-') || hash.startsWith('jun-') || hash.startsWith('jul-') || hash.startsWith('may-')) {
-          if (currentSort !== 'paper') {
-            setSortMode('paper');
-            return;
-          }
-        }
-
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        target.classList.add('anchor-highlight');
-        setTimeout(() => target.classList.remove('anchor-highlight'), 2600);
-      }
-    }, 120);
-  }
+}
 </script>
 
 </body>
