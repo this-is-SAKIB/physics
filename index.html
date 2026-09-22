@@ -780,13 +780,13 @@
     <!-- Hero Header -->
     <header class="hero">
       <div class="eyebrow-wrapper">
-        <span class="eyebrow-chip">2 Exam Papers</span>
-        <span class="eyebrow-chip">12 Questions</span>
-        <span class="eyebrow-chip">5 Topics</span>
+        <span class="eyebrow-chip">3 Exam Papers</span>
+        <span class="eyebrow-chip">18 Questions</span>
+        <span class="eyebrow-chip">7 Topics</span>
       </div>
       <h1>Physics Question Bank</h1>
       <p class="subtitle">Complete interactive collection with multi-format export and AI solver integration.</p>
-      <div class="stat-line">June 26th, 2026 &bull; July 14th, 2026</div>
+      <div class="stat-line">June 26th, 2026 &bull; July 14th, 2026 &bull; Sept 15th, 2026</div>
     </header>
 
     <!-- Global Controls Deck -->
@@ -863,14 +863,17 @@
  */
 const PAPERS_DATA = [
   { id: "JUN26", title: "Date: June 26th, 2026", shortName: "June 26, 2026" },
-  { id: "JUL14", title: "Date: July 14th, 2026", shortName: "July 14, 2026" }
+  { id: "JUL14", title: "Date: July 14th, 2026", shortName: "July 14, 2026" },
+  { id: "SEP15", title: "Date: Sept 15th, 2026", shortName: "Sept 15, 2026" }
 ];
 
 const CATEGORIES_DATA = [
   { id: "STATICS", title: "Statics & Force Systems" },
   { id: "KINEMATICS", title: "Kinematics & Projectiles" },
   { id: "DYNAMICS", title: "Dynamics & Friction" },
+  { id: "MOMENTUM", title: "Momentum & Collisions" },
   { id: "ENERGY", title: "Work, Energy & Springs" },
+  { id: "OSCILLATIONS", title: "Oscillations & SHM" },
   { id: "ROTATION", title: "Rotational Dynamics & Rolling" }
 ];
 
@@ -1268,6 +1271,185 @@ A uniform solid disk of mass M = 6.0 kg and radius R = 0.25 m is mounted on a fr
 3. Find the angular acceleration of the disk.
 4. Find the angular speed after 5.0 s and the angle through which it has turned.
 5. Find the work done by the applied force and show that it equals the final rotational kinetic energy.`
+  },
+
+  /* SEPT 15th QUESTIONS */
+  {
+    id: "Q1_SEP15",
+    paperId: "SEP15",
+    paperName: "Sept 15th, 2026",
+    category: "KINEMATICS",
+    categoryName: "Kinematics & Projectiles",
+    qNum: "Q1",
+    title: "Q1. Relative motion",
+    humanText: `A boat must cross a river of width $180\\text{ m}$. The water flows due east at $3.0\\text{ m s}^{-1}$, while the boat has speed $5.0\\text{ m s}^{-1}$ relative to the water.
+
+1. Draw a vector diagram showing the velocity of the boat relative to the water, the velocity of the water relative to the ground, and the velocity of the boat relative to the ground.
+2. At what angle upstream must the boat be pointed so that it travels directly north across the river?
+3. Find the speed of the boat relative to the ground.
+4. Find the time required to cross the river.
+5. Suppose instead that the boat is pointed directly north. Find how far downstream it reaches the opposite bank.`,
+    latexText: `Q1. Relative motion
+A boat must cross a river of width $180\\text{ m}$. The water flows due east at $3.0\\text{ m s}^{-1}$, while the boat has speed $5.0\\text{ m s}^{-1}$ relative to the water.
+1. Draw a vector diagram showing the velocity of the boat relative to the water, the velocity of the water relative to the ground, and the velocity of the boat relative to the ground.
+2. At what angle upstream must the boat be pointed so that it travels directly north across the river?
+3. Find the speed of the boat relative to the ground.
+4. Find the time required to cross the river.
+5. Suppose instead that the boat is pointed directly north. Find how far downstream it reaches the opposite bank.`,
+    plainText: `Q1. Relative motion
+A boat must cross a river of width 180 m. The water flows due east at 3.0 m/s, while the boat has speed 5.0 m/s relative to the water.
+1. Draw a vector diagram showing the velocity of the boat relative to the water, the velocity of the water relative to the ground, and the velocity of the boat relative to the ground.
+2. At what angle upstream must the boat be pointed so that it travels directly north across the river?
+3. Find the speed of the boat relative to the ground.
+4. Find the time required to cross the river.
+5. Suppose instead that the boat is pointed directly north. Find how far downstream it reaches the opposite bank.`
+  },
+  {
+    id: "Q2_SEP15",
+    paperId: "SEP15",
+    paperName: "Sept 15th, 2026",
+    category: "KINEMATICS",
+    categoryName: "Kinematics & Projectiles",
+    qNum: "Q2",
+    title: "Q2. Projectile motion",
+    humanText: `A ball is launched from ground level with speed $22\\text{ m s}^{-1}$ at $40^{\\circ}$ above the horizontal. A horizontal platform begins at $x = 30\\text{ m}$ and is $6.0\\text{ m}$ above the ground. Air resistance is negligible.
+
+1. Write expressions for the horizontal and vertical positions $x(t)$ and $y(t)$.
+2. Find the time at which the ball reaches $x = 30\\text{ m}$.
+3. Determine the height of the ball at this point. Does it reach the platform?
+4. Find the velocity vector of the ball when $x = 30\\text{ m}$.
+5. Find the angle that this velocity makes with the horizontal.`,
+    latexText: `Q2. Projectile motion
+A ball is launched from ground level with speed $22\\text{ m s}^{-1}$ at $40^{\\circ}$ above the horizontal. A horizontal platform begins at $x = 30\\text{ m}$ and is $6.0\\text{ m}$ above the ground. Air resistance is negligible.
+1. Write expressions for the horizontal and vertical positions $x(t)$ and $y(t)$.
+2. Find the time at which the ball reaches $x = 30\\text{ m}$.
+3. Determine the height of the ball at this point. Does it reach the platform?
+4. Find the velocity vector of the ball when $x = 30\\text{ m}$.
+5. Find the angle that this velocity makes with the horizontal.`,
+    plainText: `Q2. Projectile motion
+A ball is launched from ground level with speed 22 m/s at 40 deg above the horizontal. A horizontal platform begins at x = 30 m and is 6.0 m above the ground. Air resistance is negligible.
+1. Write expressions for the horizontal and vertical positions x(t) and y(t).
+2. Find the time at which the ball reaches x = 30 m.
+3. Determine the height of the ball at this point. Does it reach the platform?
+4. Find the velocity vector of the ball when x = 30 m.
+5. Find the angle that this velocity makes with the horizontal.`
+  },
+  {
+    id: "Q3_SEP15",
+    paperId: "SEP15",
+    paperName: "Sept 15th, 2026",
+    category: "DYNAMICS",
+    categoryName: "Dynamics & Friction",
+    qNum: "Q3",
+    title: "Q3. Block on an incline",
+    humanText: `A block of mass $m = 6.0\\text{ kg}$ rests on a $25^{\\circ}$ incline. The coefficients of friction between the block and the incline are $\\mu_s = 0.45$ and $\\mu_k = 0.30$. A force $P$ is applied parallel to the incline, directed upward.
+
+1. Draw a free-body diagram of the block.
+2. Find the range of values of $P$ for which the block can remain at rest.
+3. If $P = 60\\text{ N}$, determine whether the block moves. If it moves, state the direction.
+4. If the block moves for $P = 60\\text{ N}$, find its acceleration.`,
+    latexText: `Q3. Block on an incline
+A block of mass $m = 6.0\\text{ kg}$ rests on a $25^{\\circ}$ incline. The coefficients of friction between the block and the incline are $\\mu_s = 0.45$ and $\\mu_k = 0.30$. A force $P$ is applied parallel to the incline, directed upward.
+1. Draw a free-body diagram of the block.
+2. Find the range of values of $P$ for which the block can remain at rest.
+3. If $P = 60\\text{ N}$, determine whether the block moves. If it moves, state the direction.
+4. If the block moves for $P = 60\\text{ N}$, find its acceleration.`,
+    plainText: `Q3. Block on an incline
+A block of mass m = 6.0 kg rests on a 25 deg incline. The coefficients of friction between the block and the incline are mu_s = 0.45 and mu_k = 0.30. A force P is applied parallel to the incline, directed upward.
+1. Draw a free-body diagram of the block.
+2. Find the range of values of P for which the block can remain at rest.
+3. If P = 60 N, determine whether the block moves. If it moves, state the direction.
+4. If the block moves for P = 60 N, find its acceleration.`
+  },
+  {
+    id: "Q4_SEP15",
+    paperId: "SEP15",
+    paperName: "Sept 15th, 2026",
+    category: "MOMENTUM",
+    categoryName: "Momentum & Collisions",
+    qNum: "Q4",
+    title: "Q4. Collision and subsequent motion",
+    humanText: `A cart A of mass $0.50\\text{ kg}$ moves at $6.0\\text{ m s}^{-1}$ and collides with a stationary cart B of mass $1.0\\text{ kg}$. The carts stick together. Immediately after the collision, the combined carts move up a rough incline making an angle of $15^{\\circ}$ with the horizontal. The coefficient of kinetic friction on the incline is $\\mu_k = 0.10$.
+
+1. State the conservation law appropriate for determining the velocity immediately after the collision.
+2. Find the common speed immediately after the collision.
+3. Explain briefly why mechanical energy is not conserved during the collision.
+4. Find the distance travelled up the incline before the carts come to rest.
+5. Find the kinetic energy lost during the collision.`,
+    latexText: `Q4. Collision and subsequent motion
+A cart A of mass $0.50\\text{ kg}$ moves at $6.0\\text{ m s}^{-1}$ and collides with a stationary cart B of mass $1.0\\text{ kg}$. The carts stick together. Immediately after the collision, the combined carts move up a rough incline making an angle of $15^{\\circ}$ with the horizontal. The coefficient of kinetic friction on the incline is $\\mu_k = 0.10$.
+1. State the conservation law appropriate for determining the velocity immediately after the collision.
+2. Find the common speed immediately after the collision.
+3. Explain briefly why mechanical energy is not conserved during the collision.
+4. Find the distance travelled up the incline before the carts come to rest.
+5. Find the kinetic energy lost during the collision.`,
+    plainText: `Q4. Collision and subsequent motion
+A cart A of mass 0.50 kg moves at 6.0 m/s and collides with a stationary cart B of mass 1.0 kg. The carts stick together. Immediately after the collision, the combined carts move up a rough incline making an angle of 15 deg with the horizontal. The coefficient of kinetic friction on the incline is mu_k = 0.10.
+1. State the conservation law appropriate for determining the velocity immediately after the collision.
+2. Find the common speed immediately after the collision.
+3. Explain briefly why mechanical energy is not conserved during the collision.
+4. Find the distance travelled up the incline before the carts come to rest.
+5. Find the kinetic energy lost during the collision.`
+  },
+  {
+    id: "Q5_SEP15",
+    paperId: "SEP15",
+    paperName: "Sept 15th, 2026",
+    category: "OSCILLATIONS",
+    categoryName: "Oscillations & SHM",
+    qNum: "Q5",
+    title: "Q5. Mass and spring",
+    humanText: `A block of mass $0.40\\text{ kg}$ is attached to a horizontal spring of constant $k = 100\\text{ N m}^{-1}$ on a frictionless surface. The block is displaced $8.0\\text{ cm}$ from equilibrium and released from rest.
+
+1. Using Newton's second law and Hooke's law, show that the motion satisfies $a = -\\omega^2 x$, and identify $\\omega$.
+2. Find the period of the motion.
+3. Write an expression for the displacement $x(t)$.
+4. Find the maximum speed of the block.
+5. Find the speed when the displacement is $4.0\\text{ cm}$.`,
+    latexText: `Q5. Mass and spring
+A block of mass $0.40\\text{ kg}$ is attached to a horizontal spring of constant $k = 100\\text{ N m}^{-1}$ on a frictionless surface. The block is displaced $8.0\\text{ cm}$ from equilibrium and released from rest.
+1. Using Newton's second law and Hooke's law, show that the motion satisfies $a = -\\omega^{2} x$, and identify $\\omega$.
+2. Find the period of the motion.
+3. Write an expression for the displacement $x(t)$.
+4. Find the maximum speed of the block.
+5. Find the speed when the displacement is $4.0\\text{ cm}$.`,
+    plainText: `Q5. Mass and spring
+A block of mass 0.40 kg is attached to a horizontal spring of constant k = 100 N/m on a frictionless surface. The block is displaced 8.0 cm from equilibrium and released from rest.
+1. Using Newton's second law and Hooke's law, show that the motion satisfies a = -omega^2 * x, and identify omega.
+2. Find the period of the motion.
+3. Write an expression for the displacement x(t).
+4. Find the maximum speed of the block.
+5. Find the speed when the displacement is 4.0 cm.`
+  },
+  {
+    id: "Q6_SEP15",
+    paperId: "SEP15",
+    paperName: "Sept 15th, 2026",
+    category: "ROTATION",
+    categoryName: "Rotational Dynamics & Rolling",
+    qNum: "Q6",
+    title: "Q6. Rolling motion",
+    humanText: `A uniform solid cylinder of mass $4.0\\text{ kg}$ and radius $0.20\\text{ m}$ rolls without slipping down a $20^{\\circ}$ incline from rest. Use $I = \\frac{1}{2} M R^2$.
+
+1. Draw a free-body diagram of the cylinder.
+2. State the relation between the linear acceleration $a$ of the centre of mass and the angular acceleration $\\alpha$.
+3. Apply Newton's second law for translation and rotation to obtain the acceleration of the centre of mass.
+4. Find $a$ numerically.
+5. Find the friction force and state its direction.`,
+    latexText: `Q6. Rolling motion
+A uniform solid cylinder of mass $4.0\\text{ kg}$ and radius $0.20\\text{ m}$ rolls without slipping down a $20^{\\circ}$ incline from rest. Use $I = \\frac{1}{2} M R^{2}$.
+1. Draw a free-body diagram of the cylinder.
+2. State the relation between the linear acceleration $a$ of the centre of mass and the angular acceleration $\\alpha$.
+3. Apply Newton's second law for translation and rotation to obtain the acceleration of the centre of mass.
+4. Find $a$ numerically.
+5. Find the friction force and state its direction.`,
+    plainText: `Q6. Rolling motion
+A uniform solid cylinder of mass 4.0 kg and radius 0.20 m rolls without slipping down a 20 deg incline from rest. Use I = 1/2 * M * R^2.
+1. Draw a free-body diagram of the cylinder.
+2. State the relation between the linear acceleration a of the centre of mass and the angular acceleration alpha.
+3. Apply Newton's second law for translation and rotation to obtain the acceleration of the centre of mass.
+4. Find a numerically.
+5. Find the friction force and state its direction.`
   }
 ];
 
